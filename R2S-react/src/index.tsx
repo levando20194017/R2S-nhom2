@@ -12,6 +12,7 @@ import LoginPage from "./screens/Login";
 import store from "./store";
 import { Provider } from "react-redux";
 import { Home } from "./screens/Home";
+import SignUpPage from "./screens/SignUp";
 //nested route
 
 const router = createBrowserRouter([
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/home",
         element: <Home />,
+      },
+      {
+        path: "/signup",
+        element: <SignUpPage />,
       },
       {
         path: "/product",
