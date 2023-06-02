@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./main.css";
+import "../../assets/css/index.css";
 
 import { useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
@@ -28,7 +28,7 @@ export const SignUpForm = () => {
                             <div className="form-message"></div>
                         </div>
                         <div className="inputEmail">
-                            <input id="email" type="email" name="LastName" placeholder="Tên người dùng" className="form-control" />
+                            <input id="email" type="email" name="LastName" placeholder="Email" className="form-control" />
                             <p>Bạn có thể sử dụng chữ cái, số và dấu chấm</p>
                         </div>
                         <div className="usePresentEmail">
@@ -43,9 +43,11 @@ export const SignUpForm = () => {
                             </div>
                         </div>
                         <p>Sử dụng 8 ký tự trở lên và kết hợp chữ cái, chữ số và biểu tượng</p>
-                        <div className="showPassword">
-                            <input type="checkbox" id="isShowPassword" name="isShowPassword" value="Hiện mật khẩu" />
-                            <div> Hiện mật khẩu</div>
+                        <div className="showPassword d-flex">
+                            <div>
+                                <input type="checkbox" id="isShowPassword" name="isShowPassword" value="Hiện mật khẩu" />
+                            </div>
+                            <div className="textShow"> Hiện mật khẩu</div>
                         </div>
                         <div className="button-list">
                             <div>

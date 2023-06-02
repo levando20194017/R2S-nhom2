@@ -4,7 +4,7 @@ import './style.css'
 const LoginPage = () => {
   return (
     <div className="login-page-container">
-      <LoginForm title="Login" btnLabel="Sign In" />
+      <LoginForm />
     </div>
   );
 };
