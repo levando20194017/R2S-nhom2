@@ -38,7 +38,7 @@ export const Layout = () => {
   return (
     <div>
       <Header />
-      <div style={{ padding: "10px" }}>
+      <div>
         <Outlet />
         {/* {posts.length <= 0 ? (
           <p>No user</p>
