@@ -13,7 +13,9 @@ import store from "./store";
 import { Provider } from "react-redux";
 import { Home } from "./screens/Home";
 import SignUpPage from "./screens/SignUp";
+import ProfilePage from "./screens/Profile";
 import ForgotPasswordPage from "./screens/ForgotPassword";
+import ChangePasswordPage from "./screens/ChangePassword";
 //nested route
 
 const router = createBrowserRouter([
@@ -33,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "/home",
         element: <Home />,
+      },
+      {
+        path: "/profile",
+        element: <ProfilePage />,
       },
       {
         path: "/product",
@@ -55,6 +61,10 @@ const router = createBrowserRouter([
   {
     path: "/forgotpassword",
     element: <ForgotPasswordPage />,
+  },
+  {
+    path: "/changePassword",
+    element: <ChangePasswordPage />,
   },
 ]);
 
