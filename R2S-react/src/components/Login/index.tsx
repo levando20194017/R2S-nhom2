@@ -31,7 +31,7 @@ export const LoginForm = () => {
             <div className="inputPassword mt-3">
               <input id="password" type="password" name="password" placeholder="Mật khẩu" className="form-control" />
             </div>
-            <div className="showPassword d-flex">
+            <div className="showPassword d-flex mt-3">
               <div>
                 <input type="checkbox" id="isShowPassword" name="isShowPassword" value="Hiện mật khẩu" />
               </div>
