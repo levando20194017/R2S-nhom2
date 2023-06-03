@@ -1,12 +1,14 @@
 import { PersonalForm } from "../../components/Personal";
-import { PostForm } from "../../components/Post";
+import { ListPostForm } from "../../components/ListPost";
+import { PostSubmissionForm } from "../../components/PostSubmission";
 import './style.css'
 const ProfilePage = () => {
     return (
         <div className="profile-page-container">
             <div className="container">
                 <PersonalForm />
-                <PostForm />
+                <PostSubmissionForm />
+                <ListPostForm />
             </div>
         </div>
     );
