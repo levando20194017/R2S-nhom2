@@ -1,0 +1,47 @@
+.main-profile .managePosts i {
+    margin-right: 7px;
+}
+
+.main-profile .post-content {
+    padding: 0px 30px;
+}
+
+.main-profile .image img {
+    width: 100%;
+}
+
+.main-profile .post-action {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.main-profile .post-action .like {
+    cursor: pointer;
+}
+
+.main-profile .post-action .comment {
+    cursor: pointer;
+}
+
+.main-profile .post-action .share {
+    cursor: pointer;
+}
+
+.main-profile .post-content-share {
+    padding: 0 30px;
+    margin-top: 15px;
+}
+
+.main-profile .post-content-share .card {
+    border: 1px solid gainsboro;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.author {
+    font-size: 18px;
+}
+
+.content {
+    font-size: 18px;
+}

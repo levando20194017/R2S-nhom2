@@ -16,7 +16,8 @@ import SignUpPage from "./screens/SignUp";
 import ProfilePage from "./screens/Profile";
 import ForgotPasswordPage from "./screens/ForgotPassword";
 import ChangePasswordPage from "./screens/ChangePassword";
-//nested route
+
+import { CommentForm } from "./components/Comment";
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
   {
     path: "/changePassword",
     element: <ChangePasswordPage />,
+  },
+  {
+    path: "/comment",
+    element: <CommentForm />,
   },
 ]);
 
