@@ -3,7 +3,7 @@ import "../../assets/css/index.css";
 import "./style.css"
 import { useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
-
+import { ModalPost } from "../../screens/ModalPost";
 // interface Props {
 //   title: string; // required
 //   btnLabel: string; // optional
@@ -59,6 +59,10 @@ export const ListPostForm = () => {
                                     <div style={{ fontWeight: "600", marginTop: "6px", fontSize: "18px", marginLeft: "10px" }}>
                                         99 comments
                                     </div>
+                                    <ModalPost
+                                        isOpen={isOpenModalComment}
+                                        toggleFromParent={toggleCommentModal}
+                                    />
                                 </div>
                             </div>
                         </div>
