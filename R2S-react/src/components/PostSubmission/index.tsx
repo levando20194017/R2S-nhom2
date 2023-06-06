@@ -1,5 +1,14 @@
 import './style.css'
+import { useState } from 'react';
+import { ModalPostSubmission } from '../../screens/ModalPostSubmission';
 export const PostSubmissionForm = () => {
+    const [isOpenModal, setIsOpenModal] = useState<Boolean>(false)
+    const handleAddPostSubmission = () => {
+        setIsOpenModal(true);
+    }
+    const togglePostSubmissionModal = () => {
+        setIsOpenModal(!isOpenModal)
+    }
     return (
         <div className="main-profile" style={{ marginTop: "-42px", padding: "10px" }}>
             <div className="profile-main-body">
@@ -11,8 +20,12 @@ export const PostSubmissionForm = () => {
                                     width="75" />
                             </div>
                             <div className="inputPassword mt-3 col-9">
-                                <input id="post" type="text" name="post" placeholder="Hey Lê Văn Do, what are you thinking?" className="form-control" />
+                                <input id="post" type="text" name="post" placeholder="Hey Lê Văn Do, what are you thinking?" className="form-control" onClick={handleAddPostSubmission} />
                             </div>
+                            <ModalPostSubmission
+                                isOpen={isOpenModal}
+                                toggleFromParent={togglePostSubmissionModal}
+                            />
                         </div>
                         <div className="col-8 offset-2 d-flex text-secondary" style={{ justifyContent: "space-between", fontSize: "20px", fontWeight: "500", marginBottom: "10px" }}>
                             <div>

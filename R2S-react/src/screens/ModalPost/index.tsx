@@ -18,8 +18,9 @@ export const ModalPost = (props: any) => {
             size='lg'
             centered
         >
-            <ModalHeader toggle={() => { toggle() }} style={{ paddingLeft: "40%" }}>
-                Post of Lê Văn Do
+            <ModalHeader toggle={() => { toggle() }}>
+                <div style={{ fontWeight: "400" }}>Post of</div>
+                <div style={{ marginLeft: "5px", fontWeight: "bold" }}>Lê Văn Do</div>
             </ModalHeader>
             <Scrollbars style={{ height: "72vh" }}>
                 <ModalBody>

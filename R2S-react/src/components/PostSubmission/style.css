@@ -55,3 +55,7 @@
 .main-profile .managePosts i {
     margin-right: 7px;
 }
+
+.profile-main-body .inputPassword input {
+    cursor: pointer;
+}
