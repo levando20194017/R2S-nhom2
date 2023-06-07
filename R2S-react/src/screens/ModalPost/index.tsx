@@ -32,12 +32,12 @@ export const ModalPost = (props: any) => {
                                         <div className=" d-flex mt-4">
                                             <div className="col-11 d-flex">
                                                 <div>
-                                                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" className="rounded-circle"
+                                                    <img src={props.img_urlAuthor} alt="Admin" className="rounded-circle"
                                                         width="50" />
                                                 </div>
                                                 <div style={{ marginLeft: "8px" }}>
-                                                    <div style={{ fontWeight: "bold" }} className="author">Lê Văn Do</div>
-                                                    <div className="text-secondary">7 June at 19:30. <i className="fas fa-globe-asia"></i></div>
+                                                    <div style={{ fontWeight: "bold" }} className="author">{props.author}</div>
+                                                    <div className="text-secondary">{props.createdAt}. <i className="fas fa-globe-asia"></i></div>
                                                 </div>
                                             </div>
                                             <div className=" col-1" style={{ fontSize: "30px", marginLeft: "50px" }}>
@@ -46,11 +46,10 @@ export const ModalPost = (props: any) => {
                                         </div>
                                         <div className="post-content">
                                             <div className="content">
-                                                Câu hỏi áp lực nhất mỗi lần về quê:
-                                                "Khi mô ra trường rứa cháu?" 🥶
+                                                {props.content}
                                             </div>
                                             <div className="image mt-3">
-                                                <img src={`${process.env.PUBLIC_URL}/assets/img/img1.png`} alt="Avatar" />
+                                                <img src={props.img_urlPost} alt="Avatar" />
                                             </div>
                                             <div className="d-flex mt-3" style={{ justifyContent: "space-between" }}>
                                                 <div className="number-of-likes d-flex">
@@ -99,10 +98,10 @@ export const ModalPost = (props: any) => {
                         <input className='input-comment__form' placeholder='Post a comment...' />
                         <div className='d-flex' style={{ justifyContent: "space-between", marginTop: "30px" }}>
                             <div className='d-flex input-comment__icons'>
-                                <i className="fas fa-camera"></i>
-                                <i className="far fa-kiss-wink-heart"></i>
-                                <i className="fas fa-gift"></i>
-                                <i className="fas fa-sticky-note"></i>
+                                <i className="fas fa-camera" style={{ color: "gray" }}></i>
+                                <i className="far fa-kiss-wink-heart" style={{ color: "orange" }}></i>
+                                <i className="fas fa-gift" style={{ color: "red" }}></i>
+                                <i className="fas fa-sticky-note" style={{ color: "green" }}></i>
                             </div>
                             <div>
                                 <i className="fas fa-paper-plane"></i>

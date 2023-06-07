@@ -3,7 +3,9 @@ import axios from 'axios';
 const handleLoginApi = (userEmail: string, userPassword: string) => {
     return axios.post('http://localhost:8080/api/login', { email: userEmail, password: userPassword });
 }
-
+const handleSignUpApi = (userEmail: string, userPassword: string, userFullName: string) => {
+    return axios.post('http://localhost:8080/api/create-new-user', { email: userEmail, password: userPassword, fullName: userFullName });
+}
 const getAllUsers = (inputId: string) => {
     return axios.get(`http://localhost:8080/api/get-all-users?id=${inputId}`);
 }
@@ -28,4 +30,4 @@ const editUserService = (data: UserData) => {
     return axios.put('http://localhost:8080/api/edit-user', data);
 }
 
-export { handleLoginApi, getAllUsers, createNewUserService, deleteUserService, editUserService }; 
+export { handleLoginApi, getAllUsers, createNewUserService, deleteUserService, editUserService, handleSignUpApi }; 

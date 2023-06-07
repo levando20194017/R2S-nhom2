@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { Actions } from "../../store/actions";
+import { Actions } from "../../store/actions/actionTypes";
 
 const Product = () => {
   const navigate = useNavigate();
@@ -11,10 +11,10 @@ const Product = () => {
     navigate("/student");
   };
   const handleLogin = () => {
-    dispath({ type: Actions.LOGIN_USER })
+    dispath({ type: Actions.USER_LOGIN_SUCCESS })
   }
   const handleLogout = () => {
-    dispath({ type: Actions.LOGOUT_USER })
+    dispath({ type: Actions.PROCESS_LOGOUT })
   }
   const handleUpdateUser = () => {
     dispath({ type: Actions.UPDATE_USER, payload: "Bùi Tiến Đạt" })
