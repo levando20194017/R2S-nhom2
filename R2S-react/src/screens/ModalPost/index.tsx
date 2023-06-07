@@ -93,7 +93,7 @@ export const ModalPost = (props: any) => {
                 <div className='media d-flex form-input-comment' style={{ width: "100%" }}>
                     <a className="pull-left" href="#"><img className="rounded-circle"
                         width="50"
-                        src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" /></a>
+                        src={props.img_urlAuthor} alt="" /></a>
                     <div className="input-comment">
                         <input className='input-comment__form' placeholder='Post a comment...' />
                         <div className='d-flex' style={{ justifyContent: "space-between", marginTop: "30px" }}>

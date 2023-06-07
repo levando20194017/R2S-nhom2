@@ -18,27 +18,29 @@ interface Post {
     content: string;
     img_url: string;
     createdAt: string;
+    isOpenModalComment: boolean;
 }
 
 export const ListPostForm = () => {
-    const [isOpenModalComment, setIsOpenModalComment] = useState<Boolean>(false)
-    const handleAddNewComment = () => {
-        setIsOpenModalComment(true);
+    const handleAddNewComment = (post: Post) => {
+        const updatedPost = { ...post, isOpenModalComment: true };
+        setListPosts(listPosts.map(p => p.id === post.id ? updatedPost : p));
     }
-    const toggleCommentModal = () => {
-        setIsOpenModalComment(!isOpenModalComment)
-    }
+    const toggleCommentModal = (post: Post) => {
+        const updatedPost = { ...post, isOpenModalComment: !post.isOpenModalComment };
+        setListPosts(listPosts.map(p => p.id === post.id ? updatedPost : p));
+    };
     const [listPosts, setListPosts] = useState<Post[]>([])
     const [post, setPost] = useState<Post>({
         id: "",
         content: "",
         img_url: "",
-        createdAt: ""
+        createdAt: "",
+        isOpenModalComment: false
     })
 
     const user = useSelector(state => (state as any).user)
     const userData = user.userInfo;
-    var postData: Post[] = []
     useEffect(() => {
         const fetchData = async () => {
             const data = await getAllPostById(userData.id);
@@ -91,8 +93,8 @@ export const ListPostForm = () => {
                                                 99 comments
                                             </div>
                                             <ModalPost
-                                                isOpen={isOpenModalComment}
-                                                toggleFromParent={toggleCommentModal}
+                                                isOpen={post.isOpenModalComment}
+                                                toggleFromParent={() => toggleCommentModal(post)}
                                                 postId={post.id}
                                                 content={post.content}
                                                 img_urlPost={post.img_url}
@@ -109,7 +111,7 @@ export const ListPostForm = () => {
                                         <div className="like text-secondary">
                                             <i className="fas fa-thumbs-up"></i> Like
                                         </div>
-                                        <div className="comment text-secondary" onClick={handleAddNewComment}>
+                                        <div className="comment text-secondary" onClick={() => handleAddNewComment(post)}>
                                             <i className="fas fa-comment-alt"></i> Comment
                                         </div>
                                         <div className="share text-secondary">

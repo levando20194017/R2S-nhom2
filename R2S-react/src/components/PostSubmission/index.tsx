@@ -20,7 +20,8 @@ export const PostSubmissionForm = () => {
                                     width="75" />
                             </div>
                             <div className="inputPassword mt-3 col-9">
-                                <input id="post" type="text" name="post" placeholder="Hey Lê Văn Do, what are you thinking?" className="form-control" onClick={handleAddPostSubmission} />
+                                <input id="post" type="text" name="post" placeholder="Hey Lê Văn Do, what are you thinking?" className="form-control"
+                                    onClick={handleAddPostSubmission} />
                             </div>
                             <ModalPostSubmission
                                 isOpen={isOpenModal}
