@@ -22,7 +22,6 @@ export const PersonalForm = () => {
     // }
     const user = useSelector(state => (state as any).user)
     const userData = user.userInfo;
-    console.log(user);
     const navigate = useNavigate();
     return (
         <div className="main-profile">

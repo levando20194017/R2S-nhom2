@@ -18,6 +18,9 @@ export const SignUpForm = () => {
     const [message, setMessage] = useState<string>('');
     const navigate = useNavigate();
     const dispath = useDispatch()
+    const btnLogin = () => {
+        navigate("/login")
+    }
     const formik = useFormik<any>({
         initialValues: {
             fullName: "",
@@ -124,7 +127,7 @@ export const SignUpForm = () => {
                         </div>
                         <div className="button-list">
                             <div>
-                                <button className="btn-signUP">Đăng nhập</button>
+                                <button className="btn-signUP" onClick={btnLogin}>Đăng nhập</button>
                             </div>
                             <div>
                                 <button type="submit" className="btn-next">Tiếp theo</button>

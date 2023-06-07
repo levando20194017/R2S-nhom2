@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../assets/css/index.css";
 import "./style.css"
 import { useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import { ModalPost } from "../../screens/ModalPost";
-// interface Props {
-//   title: string; // required
-//   btnLabel: string; // optional
-// }
+import { getAllPostById } from "../../services/postService";
+import { useSelector } from 'react-redux';
 
+interface ResponseData {
+    errCode: number;
+    message: string;
+    posts: Post[];
+    // other properties
+}
+interface Post {
+    id: string;
+    content: string;
+    img_url: string;
+    createdAt: string;
+}
 
 export const ListPostForm = () => {
     const [isOpenModalComment, setIsOpenModalComment] = useState<Boolean>(false)
@@ -18,70 +28,100 @@ export const ListPostForm = () => {
     const toggleCommentModal = () => {
         setIsOpenModalComment(!isOpenModalComment)
     }
+    const [listPosts, setListPosts] = useState<Post[]>([])
+    const [post, setPost] = useState<Post>({
+        id: "",
+        content: "",
+        img_url: "",
+        createdAt: ""
+    })
+
+    const user = useSelector(state => (state as any).user)
+    const userData = user.userInfo;
+    var postData: Post[] = []
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getAllPostById(userData.id);
+            setListPosts(data.data.posts)
+            console.log(listPosts);
+        }
+        fetchData();
+    }, [post]);
+
     return (
         <div className="main-profile" style={{ marginTop: "-42px", padding: "10px" }}>
             <div className="profile-main-body">
                 <div className="row">
-                    <div className="card mt-2" style={{ padding: "0 30px" }}>
-                        <div className="card-body d-flex mt-4">
-                            <div className="col-11 d-flex">
-                                <div>
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" className="rounded-circle"
-                                        width="50" />
-                                </div>
-                                <div style={{ marginLeft: "8px" }}>
-                                    <div style={{ fontWeight: "bold" }} className="author">Lê Văn Do</div>
-                                    <div className="text-secondary">7 June at 19:30. <i className="fas fa-globe-asia"></i></div>
-                                </div>
-                            </div>
-                            <div className=" col-1" style={{ fontSize: "30px", marginLeft: "50px" }}>
-                                <i className="fas fa-ellipsis-h"></i>
-                            </div>
-                        </div>
-                        <div className="post-content">
-                            <div className="content">
-                                Câu hỏi áp lực nhất mỗi lần về quê:
-                                "Khi mô ra trường rứa cháu?" 🥶
-                            </div>
-                            <div className="image mt-3">
-                                <img src={`${process.env.PUBLIC_URL}/assets/img/img1.png`} alt="Avatar" />
-                            </div>
-                            <div className="d-flex mt-3" style={{ justifyContent: "space-between" }}>
-                                <div className="number-of-likes d-flex">
-                                    <div style={{ width: "35px", height: "35px", borderRadius: "50%", backgroundColor: "blue", justifyContent: "center", alignItems: "center", display: "flex" }}>
-                                        <i className="fas fa-thumbs-up" style={{ fontSize: "20px", color: "white" }}></i>
+                    {listPosts.map((post: Post) => {
+                        return (
+                            <div className="card mt-2" style={{ padding: "0 30px" }}>
+                                <div className="card-body d-flex mt-4">
+                                    <div className="col-11 d-flex">
+                                        <div>
+                                            <img src={userData.img_url} alt="Admin" className="rounded-circle"
+                                                width="50" />
+                                        </div>
+                                        <div style={{ marginLeft: "8px" }}>
+                                            <div style={{ fontWeight: "bold" }} className="author">{userData.fullName}</div>
+                                            <div className="text-secondary">{post.createdAt}. <i className="fas fa-globe-asia"></i></div>
+                                        </div>
                                     </div>
-                                    <div style={{ fontWeight: "600", marginTop: "6px", fontSize: "18px", marginLeft: "10px" }}>
-                                        999 likes
+                                    <div className=" col-1" style={{ fontSize: "30px", marginLeft: "50px" }}>
+                                        <i className="fas fa-ellipsis-h"></i>
                                     </div>
                                 </div>
-                                <div className="number-of-comments">
-                                    <div style={{ fontWeight: "600", marginTop: "6px", fontSize: "18px", marginLeft: "10px" }}>
-                                        99 comments
+                                <div className="post-content">
+                                    <div className="content">
+                                        {post.content}
                                     </div>
-                                    <ModalPost
-                                        isOpen={isOpenModalComment}
-                                        toggleFromParent={toggleCommentModal}
-                                    />
+                                    <div className="image mt-3">
+                                        <img src={post.img_url} alt="Avatar" />
+                                    </div>
+                                    <div className="d-flex mt-3" style={{ justifyContent: "space-between" }}>
+                                        <div className="number-of-likes d-flex">
+                                            <div style={{ width: "35px", height: "35px", borderRadius: "50%", backgroundColor: "blue", justifyContent: "center", alignItems: "center", display: "flex" }}>
+                                                <i className="fas fa-thumbs-up" style={{ fontSize: "20px", color: "white" }}></i>
+                                            </div>
+                                            <div style={{ fontWeight: "600", marginTop: "6px", fontSize: "18px", marginLeft: "10px" }}>
+                                                999 likes
+                                            </div>
+                                        </div>
+                                        <div className="number-of-comments">
+                                            <div style={{ fontWeight: "600", marginTop: "6px", fontSize: "18px", marginLeft: "10px" }}>
+                                                99 comments
+                                            </div>
+                                            <ModalPost
+                                                isOpen={isOpenModalComment}
+                                                toggleFromParent={toggleCommentModal}
+                                                postId={post.id}
+                                                content={post.content}
+                                                img_urlPost={post.img_url}
+                                                author={userData.fullName}
+                                                img_urlAuthor={userData.img_url}
+                                                createdAt={post.createdAt}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="post-action" style={{ padding: "0 30px" }}>
+                                    <hr />
+                                    <div className="d-flex" style={{ justifyContent: "space-between", padding: "0 100px", marginTop: "-10px" }}>
+                                        <div className="like text-secondary">
+                                            <i className="fas fa-thumbs-up"></i> Like
+                                        </div>
+                                        <div className="comment text-secondary" onClick={handleAddNewComment}>
+                                            <i className="fas fa-comment-alt"></i> Comment
+                                        </div>
+                                        <div className="share text-secondary">
+                                            <i className="fas fa-share"></i> Share
+                                        </div>
+                                    </div>
+                                    <hr style={{ marginTop: "9px" }} />
                                 </div>
                             </div>
-                        </div>
-                        <div className="post-action" style={{ padding: "0 30px" }}>
-                            <hr />
-                            <div className="d-flex" style={{ justifyContent: "space-between", padding: "0 100px", marginTop: "-10px" }}>
-                                <div className="like text-secondary">
-                                    <i className="fas fa-thumbs-up"></i> Like
-                                </div>
-                                <div className="comment text-secondary" onClick={handleAddNewComment}>
-                                    <i className="fas fa-comment-alt"></i> Comment
-                                </div>
-                                <div className="share text-secondary">
-                                    <i className="fas fa-share"></i> Share
-                                </div>
-                            </div>
-                            <hr style={{ marginTop: "9px" }} />
-                        </div>
-                    </div>
+                        )
+                    })}
+
                     <div className="card mt-2" style={{ padding: "0 30px" }}>
                         <div className="card-body d-flex mt-4">
                             <div className="col-11 d-flex">
