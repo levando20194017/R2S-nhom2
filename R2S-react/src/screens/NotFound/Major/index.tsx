@@ -6,7 +6,7 @@ import { MajorItem } from "../../../components/MajorItem";
 
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { Actions } from "../../../store/actions";
+import { Actions } from "../../../store/actions/actionTypes";
 import { log } from "console";
 
 // const majorList = [

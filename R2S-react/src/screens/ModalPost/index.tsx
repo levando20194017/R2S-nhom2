@@ -99,10 +99,10 @@ export const ModalPost = (props: any) => {
                         <input className='input-comment__form' placeholder='Post a comment...' />
                         <div className='d-flex' style={{ justifyContent: "space-between", marginTop: "30px" }}>
                             <div className='d-flex input-comment__icons'>
-                                <i className="fas fa-camera"></i>
-                                <i className="far fa-kiss-wink-heart"></i>
-                                <i className="fas fa-gift"></i>
-                                <i className="fas fa-sticky-note"></i>
+                                <i className="fas fa-camera" style={{ color: "gray" }}></i>
+                                <i className="far fa-kiss-wink-heart" style={{ color: "orange" }}></i>
+                                <i className="fas fa-gift" style={{ color: "red" }}></i>
+                                <i className="fas fa-sticky-note" style={{ color: "green" }}></i>
                             </div>
                             <div>
                                 <i className="fas fa-paper-plane"></i>

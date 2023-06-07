@@ -180,3 +180,8 @@
     width: 93px;
     height: 36px;
 }
+
+.input-comment i {
+    font-size: 120%;
+    cursor: pointer;
+}

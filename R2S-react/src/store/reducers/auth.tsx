@@ -1,4 +1,4 @@
-import { Actions } from "../actions";
+import { Actions } from "../actions/actionTypes";
 
 const initialState = {
     isLoggedIn: false,
@@ -29,12 +29,12 @@ const initialState = {
 
 export const authReducer = (state = initialState, actions: any) => {
     switch (actions.type) {
-        case Actions.LOGIN_USER:
+        case Actions.USER_LOGIN_SUCCESS:
             return {
                 ...state,
                 isLoggedIn: true
             }
-        case Actions.LOGOUT_USER:
+        case Actions.PROCESS_LOGOUT:
             return {
                 ...initialState
             }
