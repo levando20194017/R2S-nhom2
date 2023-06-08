@@ -1,10 +1,8 @@
 import { createStore, combineReducers } from 'redux'
-import { authReducer } from './reducers/auth'
 import userReducer from './reducers/userReducer'
 import appReducer from './reducers/appReducer'
 
 const rootReducer = combineReducers({
-    auth: authReducer,
     user: userReducer,
     app: appReducer
 })

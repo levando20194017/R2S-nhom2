@@ -87,7 +87,7 @@ export const ModalPostSubmission = (props: any) => {
                                                 </div>
                                             </div>
                                             <div className='postSubmission-content'>
-                                                <textarea className=" mt-3" name="description" placeholder='Hey Lê Văn Do, What are you thinking?'
+                                                <textarea className=" mt-3" name="description" placeholder={`Hey ${userData.fullName}, What are you thinking?`}
                                                     value={content} onChange={e => setContent(e.target.value)}></textarea>
                                                 <input className='form-control' placeholder='Input your image link...'
                                                     value={img_url} onChange={e => setImg_url(e.target.value)} />

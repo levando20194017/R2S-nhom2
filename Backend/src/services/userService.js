@@ -161,22 +161,19 @@ let updateUserData = (data) => {
                     message: "Missing required parameters!"
                 })
             }
-
-            let hashPasswordFormBcrypt = await hashUserPassword(data.password);
-            let checkEmail = await checkUserEmail(data.email);
-            if (checkEmail === false) {
-                let user = await db.User.findOne({
-                    where: { id: data.id },
-                    raw: false
-                });
-                if (user) {
+            let user = await db.User.findOne({
+                where: { id: data.id },
+                raw: false
+            });
+            if (user) {
+                let checkEmail = await checkUserEmail(data.email);
+                if (user.email === data.email || checkEmail === false) {
                     user.email = data.email || user.email
-                    user.password = hashPasswordFormBcrypt || user.password
                     user.fullName = data.fullName || user.fullName
                     user.address = data.address || user.address
                     user.phoneNumber = data.phoneNumber || user.phoneNumber
                     user.img_url = data.img_url || user.img_url
-                    user.gender = (data.gender === '1') ? true : false
+                    user.gender = data.gender || user.gender
 
                     await user.save();
                     resolve({
@@ -185,14 +182,14 @@ let updateUserData = (data) => {
                     })
                 } else {
                     resolve({
-                        errCode: 1,
-                        message: 'User not found!'
+                        errCode: 3,
+                        message: "Email is already exist"
                     })
                 }
             } else {
                 resolve({
-                    errCode: 3,
-                    message: "Email is already exist"
+                    errCode: 1,
+                    message: 'User not found!'
                 })
             }
         } catch (e) {

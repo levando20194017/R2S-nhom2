@@ -6,7 +6,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Layout } from "./components/Layout";
-import Major from "./screens/NotFound/Major";
 import ProductDetail from "./screens/Product/ProductDetail";
 import LoginPage from "./screens/Login";
 import store from "./store";
@@ -25,10 +24,6 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <p>Not found</p>,
     children: [
-      {
-        path: "/major",
-        element: <Major />,
-      },
       {
         path: "/student",
         element: <h1>Student Page</h1>,

@@ -39,6 +39,28 @@ export const ListPostForm = () => {
         isOpenModalComment: false
     })
 
+    const [showDropdown, setShowDropdown] = useState([false]);
+
+    const handleDropdownClick = (post: Post, index: number) => {
+        const newShowDropdown = [...showDropdown];
+        newShowDropdown[index] = !newShowDropdown[index];
+        setShowDropdown(newShowDropdown);
+    };
+
+    const handleEditClick = (post: Post, index: number) => {
+        console.log('Edit selected for post:', post);
+        const newShowDropdown = [...showDropdown];
+        newShowDropdown[index] = false;
+        setShowDropdown(newShowDropdown);
+    };
+
+    const handleDeleteClick = (post: Post, index: number) => {
+        console.log('Delete selected for post:', post);
+        const newShowDropdown = [...showDropdown];
+        newShowDropdown[index] = false;
+        setShowDropdown(newShowDropdown);
+    };
+
     const user = useSelector(state => (state as any).user)
     const userData = user.userInfo;
     useEffect(() => {
@@ -54,7 +76,7 @@ export const ListPostForm = () => {
         <div className="main-profile" style={{ marginTop: "-42px", padding: "10px" }}>
             <div className="profile-main-body">
                 <div className="row">
-                    {listPosts.map((post: Post) => {
+                    {listPosts.map((post: Post, index) => {
                         return (
                             <div className="card mt-2" style={{ padding: "0 30px" }}>
                                 <div className="card-body d-flex mt-4">
@@ -69,7 +91,15 @@ export const ListPostForm = () => {
                                         </div>
                                     </div>
                                     <div className=" col-1" style={{ fontSize: "30px", marginLeft: "50px" }}>
-                                        <i className="fas fa-ellipsis-h"></i>
+                                        <div className="dropdown">
+                                            <i className="fas fa-ellipsis-h" onClick={() => handleDropdownClick(post, index)}></i>
+                                            {showDropdown[index] && (
+                                                <div className="dropdown-content">
+                                                    <div onClick={() => handleEditClick(post, index)} style={{ borderBottom: "1px solid gray" }}>Edit</div>
+                                                    <div onClick={() => handleDeleteClick(post, index)}>Delete</div>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="post-content">

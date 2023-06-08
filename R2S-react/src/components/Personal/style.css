@@ -73,3 +73,17 @@
 .profile-main-body .message a:hover {
     color: white;
 }
+
+.profile-main-body .infor input {
+    outline: none;
+    border: none;
+    width: 100%;
+    background-color: #f0f3ff;
+    border-radius: 5px;
+}
+
+.profile-main-body .infor select {
+    outline: none;
+    border: none;
+    background-color: #f0f3ff;
+}

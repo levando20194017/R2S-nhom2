@@ -52,6 +52,11 @@ const userReducer: Reducer<UserState, any> = (state = getInitialState(), action:
                 isLoggedIn: false,
                 userInfo: null
             }
+        case Actions.UPDATE_USER:
+            return {
+                ...state,
+                userInfo: action.userInfo
+            }
         default:
             return state;
     }
