@@ -24,7 +24,7 @@ export const CommentForm = (props: any) => {
     return (
         <div className="media d-flex">
             <a className="pull-left" href="#"><img className="rounded-circle"
-                width="50"
+                width="50" height={50}
                 src={userComment.img_url} alt="" /></a>
             <div className="media-body">
                 <h6 className="media-heading">{userComment.fullName}</h6>

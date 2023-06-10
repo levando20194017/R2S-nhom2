@@ -102,7 +102,7 @@ export const ModalPost = (props: any) => {
                                             <div className="col-11 d-flex">
                                                 <div>
                                                     <img src={props.img_urlAuthor} alt="Admin" className="rounded-circle"
-                                                        width="50" />
+                                                        width="50" height={50} />
                                                 </div>
                                                 <div style={{ marginLeft: "8px" }}>
                                                     <div style={{ fontWeight: "bold" }} className="author">{props.author}</div>
@@ -122,11 +122,11 @@ export const ModalPost = (props: any) => {
                                             </div>
                                             <div className="d-flex mt-3" style={{ justifyContent: "space-between" }}>
                                                 <div className="number-of-likes d-flex">
-                                                    <div style={{ width: "35px", height: "35px", borderRadius: "50%", backgroundColor: "blue", justifyContent: "center", alignItems: "center", display: "flex" }}>
+                                                    {props.likePosts && (props.likePosts.length >= 1 ? <div style={{ width: "35px", height: "35px", borderRadius: "50%", backgroundColor: "blue", justifyContent: "center", alignItems: "center", display: "flex" }}>
                                                         <i className="fas fa-thumbs-up" style={{ fontSize: "20px", color: "white" }}></i>
-                                                    </div>
+                                                    </div> : "")}
                                                     <div style={{ fontWeight: "600", marginTop: "6px", fontSize: "18px", marginLeft: "10px" }}>
-                                                        999 likes
+                                                        {props.likePosts && (props.likePosts.length > 1 ? `${props.likePosts.length} likes` : props.likePosts.length ? `${props.likePosts.length} like` : "")}
                                                     </div>
                                                 </div>
                                                 <div className="number-of-comments">
@@ -139,9 +139,12 @@ export const ModalPost = (props: any) => {
                                         <div className="post-action" style={{ padding: "0 30px" }}>
                                             <hr />
                                             <div className="d-flex" style={{ justifyContent: "space-between", padding: "0 100px", marginTop: "-10px" }}>
-                                                <div className="like text-secondary">
-                                                    <i className="fas fa-thumbs-up"></i> Like
-                                                </div>
+                                                {props.isLiked ? (<div className="like text-secondary">
+                                                    <i className="fas fa-thumbs-up" style={{ color: "blue" }}></i> <span style={{ color: "blue" }}>Like</span>
+                                                </div>) :
+                                                    (<div className="like text-secondary" >
+                                                        <i className="fas fa-thumbs-up" ></i> Like
+                                                    </div>)}
                                                 <div className="comment text-secondary">
                                                     <i className="fas fa-comment-alt"></i> Comment
                                                 </div>
