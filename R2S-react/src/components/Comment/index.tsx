@@ -1,124 +1,46 @@
 import './style.css'
-export const CommentForm = () => {
+import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
+import { getAllUsers } from '../../services/userService';
+interface UserComment {
+    id: string;
+    fullName: string;
+    img_url: string;
+}
+export const CommentForm = (props: any) => {
+    const [userComment, setUserComment] = useState<UserComment>({
+        id: '',
+        fullName: '',
+        img_url: ''
+    });
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getAllUsers(props.comment.userID);
+            setUserComment(data.data.users)
+        }
+        fetchData();
+    }, [props.comment.userID]);
+
     return (
-        <div className="content-item" id="comments">
-            <div className="d-flex">
-                <div className="row">
-                    <div className="">
-                        <h3>5 Comments</h3>
-
-                        {/* COMMENT 1 - START */}
-                        <div className="media d-flex">
-                            <a className="pull-left" href="#"><img className="rounded-circle"
-                                width="50"
-                                src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" /></a>
-                            <div className="media-body">
-                                <h6 className="media-heading">John Doe</h6>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet,
-                                    consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem
-                                    ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit.</p>
-                                <div className='d-flex' style={{ justifyContent: "space-between" }}>
-                                    <ul className="list-unstyled list-inline media-detail pull-lef d-flex">
-                                        <li><i className="fa fa-calendar"></i>27/02/2014</li>
-                                        <li><i className="fa fa-thumbs-up"></i>13</li>
-                                    </ul>
-                                    <ul className="list-unstyled list-inline media-detail pull-right d-flex">
-                                        <li><a href=''>Edit</a></li>
-                                        <li className=""><a href="">Delete</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="media d-flex">
-                            <a className="pull-left" href="#"><img className="rounded-circle"
-                                width="50"
-                                src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" /></a>
-                            <div className="media-body">
-                                <h6 className="media-heading">John Doe</h6>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet,
-                                    consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem
-                                    ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit.</p>
-                                <div className='d-flex' style={{ justifyContent: "space-between" }}>
-                                    <ul className="list-unstyled list-inline media-detail pull-lef d-flex">
-                                        <li><i className="fa fa-calendar"></i>27/02/2014</li>
-                                        <li><i className="fa fa-thumbs-up"></i>13</li>
-                                    </ul>
-                                    <ul className="list-unstyled list-inline media-detail pull-right d-flex">
-                                        <li><a href=''>Edit</a></li>
-                                        <li className=""><a href="">Delete</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="media d-flex">
-                            <a className="pull-left" href="#"><img className="rounded-circle"
-                                width="50"
-                                src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" /></a>
-                            <div className="media-body">
-                                <h6 className="media-heading">John Doe</h6>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet,
-                                    consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem
-                                    ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit.</p>
-                                <div className='d-flex' style={{ justifyContent: "space-between" }}>
-                                    <ul className="list-unstyled list-inline media-detail pull-lef d-flex">
-                                        <li><i className="fa fa-calendar"></i>27/02/2014</li>
-                                        <li><i className="fa fa-thumbs-up"></i>13</li>
-                                    </ul>
-                                    <ul className="list-unstyled list-inline media-detail pull-right d-flex">
-                                        <li><a href=''>Edit</a></li>
-                                        <li className=""><a href="">Delete</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="media d-flex">
-                            <a className="pull-left" href="#"><img className="rounded-circle"
-                                width="50"
-                                src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" /></a>
-                            <div className="media-body">
-                                <h6 className="media-heading">John Doe</h6>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet,
-                                    consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem
-                                    ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit.</p>
-                                <div className='d-flex' style={{ justifyContent: "space-between" }}>
-                                    <ul className="list-unstyled list-inline media-detail pull-lef d-flex">
-                                        <li><i className="fa fa-calendar"></i>27/02/2014</li>
-                                        <li><i className="fa fa-thumbs-up"></i>13</li>
-                                    </ul>
-                                    <ul className="list-unstyled list-inline media-detail pull-right d-flex">
-                                        <li><a href=''>Edit</a></li>
-                                        <li className=""><a href="">Delete</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="media d-flex">
-                            <a className="pull-left" href="#"><img className="rounded-circle"
-                                width="50"
-                                src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" /></a>
-                            <div className="media-body">
-                                <h6 className="media-heading">John Doe</h6>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                <div className='d-flex' style={{ justifyContent: "space-between" }}>
-                                    <ul className="list-unstyled list-inline media-detail pull-lef d-flex">
-                                        <li><i className="fa fa-calendar"></i>27/02/2014</li>
-                                        <li><i className="fa fa-thumbs-up"></i>13</li>
-                                    </ul>
-                                    <ul className="list-unstyled list-inline media-detail pull-right d-flex">
-                                        <li><a href=''>Edit</a></li>
-                                        <li className=""><a href="">Delete</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
+        <div className="media d-flex">
+            <a className="pull-left" href="#"><img className="rounded-circle"
+                width="50"
+                src={userComment.img_url} alt="" /></a>
+            <div className="media-body">
+                <h6 className="media-heading">{userComment.fullName}</h6>
+                <p>{props.comment.content}</p>
+                <div className='d-flex' style={{ justifyContent: "space-between" }}>
+                    <ul className="list-unstyled list-inline media-detail pull-lef d-flex">
+                        <li><i className="fa fa-calendar"></i>{props.comment.createdAt}</li>
+                        <li><i className="fa fa-thumbs-up"></i>13</li>
+                    </ul>
+                    <ul className="list-unstyled list-inline media-detail pull-right d-flex">
+                        {props.userID === props.comment.userID ? <li><a href=''>Edit</a></li> : ""}
+                        {props.userID === props.comment.userID ? <li className=""><a href="">Delete</a></li> : ""}
+                    </ul>
                 </div>
             </div>
         </div>
+
     )
 }

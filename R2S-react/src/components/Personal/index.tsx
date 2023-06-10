@@ -256,7 +256,7 @@ export const PersonalForm = () => {
                                     <div className="text-danger">{message}</div>
                                 )}
                                 <div className="row">
-                                    <div className="col-sm-2">
+                                    <div className="col-2">
                                         {isEditing ? (
                                             <div className="d-flex">
                                                 <button className="btn btn-success" onClick={handleSaveClick}>
@@ -272,7 +272,7 @@ export const PersonalForm = () => {
                                             </button>
                                         )}
                                     </div>
-                                    <div className="col-sm-3">
+                                    <div className="col-3">
                                         <button className="btn btn-info" onClick={handleChangePassword}>
                                             Change password
                                         </button>
