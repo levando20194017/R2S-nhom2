@@ -89,7 +89,7 @@ export const PersonalForm = () => {
                             <div className="card-body">
                                 <div className="d-flex flex-column align-items-center text-center">
                                     <img src={userData.img_url} alt="Admin" className="rounded-circle"
-                                        width="150" />
+                                        width="150" height={150} />
                                     <div className="mt-3">
                                         <h4>{userData.fullName}</h4>
                                         <p className="text-secondary mb-1 mt-4">Full Stack Developer</p>

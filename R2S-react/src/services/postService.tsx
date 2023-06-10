@@ -14,4 +14,10 @@ const getAllPostById = (inputId: string) => {
     return axios.get(`http://localhost:8080/api/get-all-posts?id=${inputId}`)
 }
 
-export { handleAddNewPost, getAllPostById };
+const getAllLikesOfPost = (inputId: string) => {
+    return axios.get(`http://localhost:8080/api/post/get-all-likes?id=${inputId}`)
+}
+const handleLikePost = (userID: string, postID: string) => {
+    return axios.post('http://localhost:8080/api/post/isliked', { userID: userID, postID: postID });
+}
+export { handleAddNewPost, getAllPostById, getAllLikesOfPost, handleLikePost };
