@@ -1,15 +1,22 @@
-import React, { useState } from "react";
-import { useSelector } from 'react-redux';
+import React, { useState, ChangeEvent, useEffect } from "react";
+
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { Actions } from "../../store/actions/actionTypes";
 import "../../assets/css/index.css";
 import "./style.css"
-import { useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import Cookies from 'js-cookie';
+import { editUserService } from "../../services/userService";
 
-// interface Props {
-//   title: string; // required
-//   btnLabel: string; // optional
-// }
+interface UserData {
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    gender: boolean;
+}
+
 
 export const PersonalForm = () => {
     //     const userState = Cookies.get('userState');
@@ -20,9 +27,59 @@ export const PersonalForm = () => {
     //     // Chuyển đổi giá trị cookie thành đối tượng JSON
     //     user = JSON.parse(userState);
     // }
+    const [message, setMessage] = useState<string>('');
+
     const user = useSelector(state => (state as any).user)
     const userData = user.userInfo;
     const navigate = useNavigate();
+    const dispath = useDispatch()
+    const handleChangePassword = () => {
+        navigate("/changepassword")
+    }
+
+    const [isEditing, setIsEditing] = useState(false);
+    const [updatedUserData, setUpdatedUserData] = useState(userData);
+
+    const handleEditClick = () => {
+        setIsEditing(true);
+    };
+
+    const handleSaveClick = async () => {
+        const result = await editUserService(updatedUserData);
+        setMessage(result.data.message)
+        if (result.data && result.data.errCode === 0) {
+            dispath({ type: Actions.UPDATE_USER, userInfo: updatedUserData })
+            setIsEditing(false);
+        }
+    };
+    useEffect(() => {
+        if (message !== '') {
+            const timerId = setTimeout(() => {
+                setMessage('');
+            }, 3000);
+            return () => clearTimeout(timerId);
+        }
+    }, [message]);
+
+    const handleCancelClick = () => {
+        setUpdatedUserData(userData);
+        setIsEditing(false);
+    };
+
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setUpdatedUserData((prevState: UserData) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+    const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        const { name, value } = event.target;
+        setUpdatedUserData((prevState: UserData) => ({
+            ...prevState,
+            [name]: value === "true",
+        }));
+    };
     return (
         <div className="main-profile">
             <div className="profile-main-body">
@@ -99,14 +156,23 @@ export const PersonalForm = () => {
                         </div>
                     </div>
                     <div className="col-md-8">
-                        <div className="card mb-3">
+                        <div className="card mb-3 infor">
                             <div className="card-body">
                                 <div className="row">
                                     <div className="col-sm-3">
                                         <h6 className="mb-0">Full Name</h6>
                                     </div>
                                     <div className="col-sm-9 text-secondary">
-                                        {userData.fullName}
+                                        {isEditing ? (
+                                            <input
+                                                type="text"
+                                                name="fullName"
+                                                value={updatedUserData.fullName}
+                                                onChange={handleInputChange}
+                                            />
+                                        ) : (
+                                            userData.fullName
+                                        )}
                                     </div>
                                 </div>
                                 <hr />
@@ -115,7 +181,16 @@ export const PersonalForm = () => {
                                         <h6 className="mb-0">Email</h6>
                                     </div>
                                     <div className="col-sm-9 text-secondary">
-                                        {userData.email}
+                                        {isEditing ? (
+                                            <input
+                                                type="text"
+                                                name="email"
+                                                value={updatedUserData.email}
+                                                onChange={handleInputChange}
+                                            />
+                                        ) : (
+                                            userData.email
+                                        )}
                                     </div>
                                 </div>
                                 <hr />
@@ -124,7 +199,16 @@ export const PersonalForm = () => {
                                         <h6 className="mb-0">Phone</h6>
                                     </div>
                                     <div className="col-sm-9 text-secondary">
-                                        {userData.phoneNumber}
+                                        {isEditing ? (
+                                            <input
+                                                type="text"
+                                                name="phoneNumber"
+                                                value={updatedUserData.phoneNumber}
+                                                onChange={handleInputChange}
+                                            />
+                                        ) : (
+                                            userData.phoneNumber
+                                        )}
                                     </div>
                                 </div>
                                 <hr />
@@ -133,7 +217,16 @@ export const PersonalForm = () => {
                                         <h6 className="mb-0">Address</h6>
                                     </div>
                                     <div className="col-sm-9 text-secondary">
-                                        {userData.address}
+                                        {isEditing ? (
+                                            <input
+                                                type="text"
+                                                name="address"
+                                                value={updatedUserData.address}
+                                                onChange={handleInputChange}
+                                            />
+                                        ) : (
+                                            userData.address
+                                        )}
                                     </div>
                                 </div>
                                 <hr />
@@ -142,16 +235,47 @@ export const PersonalForm = () => {
                                         <h6 className="mb-0">Gender</h6>
                                     </div>
                                     <div className="col-sm-9 text-secondary">
-                                        {userData.gender ? "Nam" : "Nữ"}
+                                        {isEditing ? (
+                                            <select
+                                                name="gender"
+                                                value={updatedUserData.gender}
+                                                onChange={handleSelectChange}
+                                            >
+                                                <option value={false.toString()}>Nữ</option>
+                                                <option value={true.toString()}>Nam</option>
+                                            </select>
+                                        ) : (
+                                            userData.gender ? "Nam" : "Nữ"
+                                        )}
                                     </div>
                                 </div>
                                 <hr />
+                                {message === 'Update user success!' ? (
+                                    <div className="text-success">{message}</div>
+                                ) : (
+                                    <div className="text-danger">{message}</div>
+                                )}
                                 <div className="row">
-                                    <div className="col-sm-1">
-                                        <button className="btn btn-info ">Edit</button>
+                                    <div className="col-2">
+                                        {isEditing ? (
+                                            <div className="d-flex">
+                                                <button className="btn btn-success" onClick={handleSaveClick}>
+                                                    Save
+                                                </button>
+                                                <button className="btn btn-danger" onClick={handleCancelClick}>
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button className="btn btn-info" onClick={handleEditClick}>
+                                                Edit
+                                            </button>
+                                        )}
                                     </div>
-                                    <div className="col-sm-3">
-                                        <button className="btn btn-info ">Change password</button>
+                                    <div className="col-3">
+                                        <button className="btn btn-info" onClick={handleChangePassword}>
+                                            Change password
+                                        </button>
                                     </div>
                                 </div>
                             </div>

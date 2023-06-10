@@ -1,6 +1,7 @@
 import './style.css'
 import { useState } from 'react';
 import { ModalPostSubmission } from '../../screens/ModalPostSubmission';
+import { useSelector } from 'react-redux';
 export const PostSubmissionForm = () => {
     const [isOpenModal, setIsOpenModal] = useState<Boolean>(false)
     const handleAddPostSubmission = () => {
@@ -9,6 +10,9 @@ export const PostSubmissionForm = () => {
     const togglePostSubmissionModal = () => {
         setIsOpenModal(!isOpenModal)
     }
+
+    const user = useSelector(state => (state as any).user)
+    const userData = user.userInfo;
     return (
         <div className="main-profile" style={{ marginTop: "-42px", padding: "10px" }}>
             <div className="profile-main-body">
@@ -16,7 +20,7 @@ export const PostSubmissionForm = () => {
                     <div className="card">
                         <div className="card-body d-flex mt-4">
                             <div className="col-1 offset-1">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" className="rounded-circle"
+                                <img src={userData.img_url} alt="Avatar" className="rounded-circle"
                                     width="75" />
                             </div>
                             <div className="inputPassword mt-3 col-9">
