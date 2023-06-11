@@ -1,4 +1,4 @@
-import { Header } from "../Header";
+import { HeaderHomepage } from "../HeaderHomepage";
 import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -37,7 +37,7 @@ export const Layout = () => {
 
   return (
     <div>
-      <Header />
+      <HeaderHomepage/>
       <div>
         <Outlet />
         {/* {posts.length <= 0 ? (
