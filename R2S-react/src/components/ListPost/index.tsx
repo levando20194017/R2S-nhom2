@@ -1,173 +1,234 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../assets/css/index.css";
 import "./style.css"
 import { useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import { ModalPost } from "../../screens/ModalPost";
-// interface Props {
-//   title: string; // required
-//   btnLabel: string; // optional
-// }
+import { getAllPostById, getAllLikesOfPost, handleLikePost } from "../../services/postService";
+import { useSelector } from 'react-redux';
+import { getAllCommentById } from "../../services/commentService";
 
+interface Comment {
+    id: string;
+    userID: string;
+    content: string;
+    createdAt: string;
+}
+interface LikePost {
+    id: string;
+    userID: string;
+    postID: string;
+}
+interface Post {
+    id: string;
+    content: string;
+    img_url: string;
+    createdAt: string;
+    isOpenModalComment: boolean;
+}
 
 export const ListPostForm = () => {
-    const [isOpenModalComment, setIsOpenModalComment] = useState<Boolean>(false)
-    const handleAddNewComment = () => {
-        setIsOpenModalComment(true);
+    const [listPosts, setListPosts] = useState<Post[]>([])
+    const [listComments, setListComments] = useState<Comment[][]>([])
+    const [likePosts, setLikePosts] = useState<LikePost[][]>([])
+    const [isLiked, setIsLiked] = useState<boolean[]>([false]);
+    const [post, setPost] = useState<Post>({
+        id: "",
+        content: "",
+        img_url: "",
+        createdAt: "",
+        isOpenModalComment: false
+    })
+
+    const [showDropdown, setShowDropdown] = useState([false]);
+
+    const handleAddNewComment = (post: Post) => {
+        const updatedPost = { ...post, isOpenModalComment: true };
+        setListPosts(listPosts.map(p => p.id === post.id ? updatedPost : p));
     }
-    const toggleCommentModal = () => {
-        setIsOpenModalComment(!isOpenModalComment)
+    const toggleCommentModal = (post: Post) => {
+        const updatedPost = { ...post, isOpenModalComment: !post.isOpenModalComment };
+        setListPosts(listPosts.map(p => p.id === post.id ? updatedPost : p));
+    };
+
+    const handleDropdownClick = (post: Post, index: number) => {
+        const newShowDropdown = [...showDropdown];
+        newShowDropdown[index] = !newShowDropdown[index];
+        setShowDropdown(newShowDropdown);
+    };
+
+    const handleEditClick = (post: Post, index: number) => {
+        console.log('Edit selected for post:', post);
+        const newShowDropdown = [...showDropdown];
+        newShowDropdown[index] = false;
+        setShowDropdown(newShowDropdown);
+    };
+
+    const handleDeleteClick = (post: Post, index: number) => {
+        console.log('Delete selected for post:', post);
+        const newShowDropdown = [...showDropdown];
+        newShowDropdown[index] = false;
+        setShowDropdown(newShowDropdown);
+    };
+    const user = useSelector(state => (state as any).user)
+    const userData = user.userInfo;
+    useEffect(() => {
+        let isMounted = true;
+        const fetchData = async () => {
+            const data = await getAllPostById(userData.id);
+            setListPosts(data.data.posts);
+            if (isMounted) {
+                let commentsArray = [];
+                let likePostsArray = [];
+                for (let i = 0; i < data.data.posts.length; i++) {
+                    const response = await getAllCommentById(data.data.posts[i].id);
+                    const comments = response.data.comments;
+                    commentsArray.push(comments);
+
+                    const responseOfLikePost = await getAllLikesOfPost(data.data.posts[i].id);
+                    const likeposts = responseOfLikePost.data.likes;
+                    likePostsArray.push(likeposts);
+                }
+                setListComments(commentsArray);
+                setLikePosts(likePostsArray);
+            }
+        };
+        fetchData();
+        return () => {
+            isMounted = false;
+        };
+    }, [userData.id]);
+    // Lưu trạng thái like của bài viết vào localStorage
+    const handleLikeThisPost = async (index: number, postID: string) => {
+        const response = await handleLikePost(userData.id, postID);
+        if (response.data.errCode === 1) {
+            const newIsLiked = [...isLiked];
+            newIsLiked[index] = false;
+            setIsLiked(newIsLiked);
+            localStorage.setItem(postID, false.toString()); // Lưu giá trị false vào localStorage
+
+            const likePostsArray = [...likePosts]
+            const responseOfLikePost = await getAllLikesOfPost(postID);
+            const likeposts = responseOfLikePost.data.likes;
+            likePostsArray[index] = likeposts;
+            setLikePosts(likePostsArray);
+
+            // ...
+        } else {
+            const newIsLiked = [...isLiked];
+            newIsLiked[index] = true;
+            setIsLiked(newIsLiked);
+            localStorage.setItem(postID, true.toString()); // Lưu giá trị true vào localStorage
+
+            const likePostsArray = [...likePosts]
+            const responseOfLikePost = await getAllLikesOfPost(postID);
+            const likeposts = responseOfLikePost.data.likes;
+            likePostsArray[index] = likeposts;
+            setLikePosts(likePostsArray);
+            // ...
+        }
     }
+
+    // Lấy giá trị trạng thái like từ localStorage và thiết lập màu xanh cho nút like
+    useEffect(() => {
+        const newIsLiked = [...isLiked];
+        listPosts.forEach((post, index) => {
+            const isPostLiked = localStorage.getItem(post.id); // Lấy giá trị trạng thái like từ localStorage
+            if (isPostLiked === "true") {
+                newIsLiked[index] = true;
+            }
+        });
+        setIsLiked(newIsLiked);
+    }, [listPosts]);
+
     return (
         <div className="main-profile" style={{ marginTop: "-42px", padding: "10px" }}>
             <div className="profile-main-body">
                 <div className="row">
-                    <div className="card mt-2" style={{ padding: "0 30px" }}>
-                        <div className="card-body d-flex mt-4">
-                            <div className="col-11 d-flex">
-                                <div>
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" className="rounded-circle"
-                                        width="50" />
-                                </div>
-                                <div style={{ marginLeft: "8px" }}>
-                                    <div style={{ fontWeight: "bold" }} className="author">Lê Văn Do</div>
-                                    <div className="text-secondary">7 June at 19:30. <i className="fas fa-globe-asia"></i></div>
-                                </div>
-                            </div>
-                            <div className=" col-1" style={{ fontSize: "30px", marginLeft: "50px" }}>
-                                <i className="fas fa-ellipsis-h"></i>
-                            </div>
-                        </div>
-                        <div className="post-content">
-                            <div className="content">
-                                Câu hỏi áp lực nhất mỗi lần về quê:
-                                "Khi mô ra trường rứa cháu?" 🥶
-                            </div>
-                            <div className="image mt-3">
-                                <img src={`${process.env.PUBLIC_URL}/assets/img/img1.png`} alt="Avatar" />
-                            </div>
-                            <div className="d-flex mt-3" style={{ justifyContent: "space-between" }}>
-                                <div className="number-of-likes d-flex">
-                                    <div style={{ width: "35px", height: "35px", borderRadius: "50%", backgroundColor: "blue", justifyContent: "center", alignItems: "center", display: "flex" }}>
-                                        <i className="fas fa-thumbs-up" style={{ fontSize: "20px", color: "white" }}></i>
-                                    </div>
-                                    <div style={{ fontWeight: "600", marginTop: "6px", fontSize: "18px", marginLeft: "10px" }}>
-                                        999 likes
-                                    </div>
-                                </div>
-                                <div className="number-of-comments">
-                                    <div style={{ fontWeight: "600", marginTop: "6px", fontSize: "18px", marginLeft: "10px" }}>
-                                        99 comments
-                                    </div>
-                                    <ModalPost
-                                        isOpen={isOpenModalComment}
-                                        toggleFromParent={toggleCommentModal}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="post-action" style={{ padding: "0 30px" }}>
-                            <hr />
-                            <div className="d-flex" style={{ justifyContent: "space-between", padding: "0 100px", marginTop: "-10px" }}>
-                                <div className="like text-secondary">
-                                    <i className="fas fa-thumbs-up"></i> Like
-                                </div>
-                                <div className="comment text-secondary" onClick={handleAddNewComment}>
-                                    <i className="fas fa-comment-alt"></i> Comment
-                                </div>
-                                <div className="share text-secondary">
-                                    <i className="fas fa-share"></i> Share
-                                </div>
-                            </div>
-                            <hr style={{ marginTop: "9px" }} />
-                        </div>
-                    </div>
-                    <div className="card mt-2" style={{ padding: "0 30px" }}>
-                        <div className="card-body d-flex mt-4">
-                            <div className="col-11 d-flex">
-                                <div>
-                                    <img src="https://scontent.fhan14-2.fna.fbcdn.net/v/t39.30808-6/340659565_5588976784537857_4663665704326849673_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=soqG4OjRqowAX_qjVqc&_nc_ht=scontent.fhan14-2.fna&oh=00_AfD7_Ol5gwRwKyLTSSf4vGiT5m1MdXcLe1rgmdu5s9BC8w&oe=6480B456" alt="Admin" className="rounded-circle"
-                                        width="50" />
-                                </div>
-                                <div style={{ marginLeft: "8px" }}>
-                                    <div className="d-flex author">
-                                        <div style={{ fontWeight: "bold" }}>Lê Văn Do</div>
-                                        <div style={{ marginLeft: "5px" }}> đã chia sẻ 1 bài viết</div>
-                                    </div>
-                                    <div className="text-secondary">7 June at 19:30. <i className="fas fa-globe-asia"></i></div>
-                                </div>
-                            </div>
-                            <div className=" col-1" style={{ fontSize: "30px", marginLeft: "50px" }}>
-                                <i className="fas fa-ellipsis-h"></i>
-                            </div>
-                        </div>
-                        <div className="content" style={{ marginLeft: "30px" }}>
-                            Tuân lốc xoáy 🥶
-                        </div>
-                        <div className="post-content-share">
-                            <div className="card">
-                                <div className="d-flex" >
-                                    <div className="image" >
-                                        <img src="https://scontent.fhan14-1.fna.fbcdn.net/v/t1.18169-9/20799159_337157193410403_6799242301083167581_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=9yYaT-hoaFUAX_ev3Hy&_nc_ht=scontent.fhan14-1.fna&oh=00_AfBHjJLuNeVI0YUcG0JGks04lfigK3rzhA5crQ4vW0TyAw&oe=64A2D600" alt="Avatar" style={{ borderTopLeftRadius: "20px", borderTopRightRadius: "20px" }} />
-                                    </div>
-                                </div>
+                    {listPosts.map((post: Post, index) => {
+                        return (
+                            <div className="card mt-2" style={{ padding: "0 30px" }}>
                                 <div className="card-body d-flex mt-4">
                                     <div className="col-11 d-flex">
                                         <div>
-                                            <img src={`${process.env.PUBLIC_URL}/assets/img/tuan.png`} alt="Admin" className="rounded-circle"
+                                            <img src={userData.img_url} alt="Admin" className="rounded-circle"
                                                 width="50" height={50} />
                                         </div>
                                         <div style={{ marginLeft: "8px" }}>
-                                            <div style={{ fontWeight: "bold" }} className="author">Trần Quốc Tuân</div>
-                                            <div className="text-secondary">7 June at 19:30. <i className="fas fa-globe-asia"></i></div>
+                                            <div style={{ fontWeight: "bold" }} className="author">{userData.fullName}</div>
+                                            <div className="text-secondary">{post.createdAt}. <i className="fas fa-globe-asia"></i></div>
                                         </div>
                                     </div>
                                     <div className=" col-1" style={{ fontSize: "30px", marginLeft: "50px" }}>
-                                        <i className="fas fa-ellipsis-h"></i>
+                                        <div className="dropdown">
+                                            <i className="fas fa-ellipsis-h" onClick={() => handleDropdownClick(post, index)}></i>
+                                            {showDropdown[index] && (
+                                                <div className="dropdown-content">
+                                                    <div onClick={() => handleEditClick(post, index)} style={{ borderBottom: "1px solid gray" }}>Edit</div>
+                                                    <div onClick={() => handleDeleteClick(post, index)}>Delete</div>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="content" style={{ marginBottom: "20px", marginLeft: "20px" }}>
-                                    Người lái đò của ae skay đây😁😁
-                                    Lục đk cái ảnh mà cười ko nhặt đk mồm😂😂
-                                    Kp bnhiu năm về trước nữa !!! 😀
+                                <div className="post-content">
+                                    <div className="content">
+                                        {post.content}
+                                    </div>
+                                    <div className="image mt-3">
+                                        <img src={post.img_url} alt="Avatar" />
+                                    </div>
+                                    <div className="d-flex mt-3" style={{ justifyContent: "space-between" }}>
+                                        <div className="number-of-likes d-flex">
+                                            {likePosts[index] && (likePosts[index].length >= 1 ? <div style={{ width: "35px", height: "35px", borderRadius: "50%", backgroundColor: "blue", justifyContent: "center", alignItems: "center", display: "flex" }}>
+                                                <i className="fas fa-thumbs-up" style={{ fontSize: "20px", color: "white" }}></i>
+                                            </div> : "")}
+                                            <div style={{ fontWeight: "600", marginTop: "6px", fontSize: "18px", marginLeft: "10px" }}>
+                                                {likePosts[index] && (likePosts[index].length > 1 ? `${likePosts[index].length} likes` : likePosts[index].length ? `${likePosts[index].length} like` : "")}
+                                            </div>
+                                        </div>
+                                        <div className="number-of-comments">
+                                            <div style={{ fontWeight: "600", marginTop: "6px", fontSize: "18px", marginLeft: "10px" }}>
+                                                {listComments[index] && (listComments[index].length > 1 ? `${listComments[index].length} comments` : listComments[index].length ? `${listComments[index].length} comment` : "")}
+                                            </div>
+                                            <ModalPost
+                                                isOpen={post.isOpenModalComment}
+                                                toggleFromParent={() => toggleCommentModal(post)}
+                                                postId={post.id}
+                                                content={post.content}
+                                                img_urlPost={post.img_url}
+                                                userID={userData.id}
+                                                author={userData.fullName}
+                                                img_urlAuthor={userData.img_url}
+                                                createdAt={post.createdAt}
+                                                isLiked={isLiked[index]}
+                                                likePosts={likePosts[index]}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
-
+                                <div className="post-action" style={{ padding: "0 30px" }}>
+                                    <hr />
+                                    <div className="d-flex" style={{ justifyContent: "space-between", padding: "0 100px", marginTop: "-10px" }}>
+                                        {isLiked[index] ? (<div className="like text-secondary" onClick={() => handleLikeThisPost(index, post.id)}>
+                                            <i className="fas fa-thumbs-up" style={{ color: "blue" }}></i> <span style={{ color: "blue" }}>Like</span>
+                                        </div>) :
+                                            (<div className="like text-secondary" onClick={() => handleLikeThisPost(index, post.id)}>
+                                                <i className="fas fa-thumbs-up" ></i> Like
+                                            </div>)}
+                                        <div className="comment text-secondary" onClick={() => handleAddNewComment(post)}>
+                                            <i className="fas fa-comment-alt"></i> Comment
+                                        </div>
+                                        <div className="share text-secondary">
+                                            <i className="fas fa-share"></i> Share
+                                        </div>
+                                    </div>
+                                    <hr style={{ marginTop: "9px" }} />
+                                </div>
                             </div>
-                        </div>
-                        <div className="d-flex mt-3" style={{ justifyContent: "space-between", padding: "0 30px" }}>
-                            <div className="number-of-likes d-flex">
-                                <div style={{ width: "35px", height: "35px", borderRadius: "50%", backgroundColor: "blue", justifyContent: "center", alignItems: "center", display: "flex" }}>
-                                    <i className="fas fa-thumbs-up" style={{ fontSize: "20px", color: "white" }}></i>
-                                </div>
-                                <div style={{ fontWeight: "600", marginTop: "6px", fontSize: "18px", marginLeft: "10px" }}>
-                                    999 likes
-                                </div>
-                            </div>
-                            <div className="number-of-comments">
-                                <div style={{ fontWeight: "600", marginTop: "6px", fontSize: "18px", marginLeft: "10px" }}>
-                                    99 comments
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="post-action" style={{ padding: "0 30px" }}>
-                            <hr />
-                            <div className="d-flex" style={{ justifyContent: "space-between", padding: "0 100px", marginTop: "-10px" }}>
-                                <div className="like text-secondary">
-                                    <i className="fas fa-thumbs-up"></i> Like
-                                </div>
-                                <div className="comment text-secondary">
-                                    <i className="fas fa-comment-alt"></i> Comment
-                                </div>
-                                <div className="share text-secondary">
-                                    <i className="fas fa-share"></i> Share
-                                </div>
-                            </div>
-                            <hr style={{ marginTop: "9px" }} />
-                        </div>
-                    </div>
+                        )
+                    })}
                 </div>
-
             </div>
         </div>
     );

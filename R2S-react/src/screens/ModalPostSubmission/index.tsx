@@ -1,15 +1,62 @@
-import React, { Component } from 'react';
-import { Form } from 'react-bootstrap';
-import { useFormik } from "formik";
-import * as Yup from 'yup';
+import React, { Component, useState, useEffect } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import './style.css'
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { useSelector } from 'react-redux';
+import { handleAddNewPost } from '../../services/postService';
+import axios, { AxiosResponse } from 'axios';
+
+interface ResponseData {
+    errCode: number;
+    message: string;
+}
+
+
 export const ModalPostSubmission = (props: any) => {
+    const [content, setContent] = useState<string>('');
+    const [img_url, setImg_url] = useState<string>('');
+    const [isPostDisabled, setIsPostDisabled] = useState<boolean>(true);
+    const [message, setMessage] = useState<string>('');
+
+    const user = useSelector(state => (state as any).user)
+    const userData = user.userInfo;
 
     const toggle = () => {
         props.toggleFromParent();
     }
+
+    useEffect(() => {
+        setIsPostDisabled(content.trim().length === 0 && img_url.trim().length === 0);
+    }, [content, img_url]);
+
+    useEffect(() => {
+        if (message) {
+            alert(message);
+        }
+    }, [message]);
+    const handlePost = async () => {
+
+        const data = {
+            userID: userData.id,
+            content: content,
+            img_url: img_url
+        }
+        try {
+            const response: AxiosResponse<ResponseData> = await handleAddNewPost(userData.id, content, img_url);
+            if (response.data && response.data.errCode === 0) {
+                setMessage(response.data.message);
+                toggle();
+            }
+            if (response.data && response.data.errCode !== 0) {
+                setMessage(response.data.message);
+            }
+
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
     return (
         <Modal
             isOpen={props.isOpen}
@@ -31,17 +78,19 @@ export const ModalPostSubmission = (props: any) => {
                                         <div>
                                             <div className="d-flex">
                                                 <div>
-                                                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" className="rounded-circle"
-                                                        width="50" />
+                                                    <img src={userData.img_url} alt="Avatar" className="rounded-circle"
+                                                        width="50" height={50} />
                                                 </div>
                                                 <div style={{ marginLeft: "8px" }}>
-                                                    <div style={{ fontWeight: "bold" }} className="author">Lê Văn Do</div>
+                                                    <div style={{ fontWeight: "bold" }} className="author">{userData.fullName}</div>
                                                     <div className="public-icon"><i className="fas fa-globe-asia"></i>  Public  <i className="fas fa-caret-down"></i></div>
                                                 </div>
                                             </div>
                                             <div className='postSubmission-content'>
-                                                <textarea className=" mt-3" name="description" placeholder='Hey Lê Văn Do, What are you thinking?'></textarea>
-                                                <input className='form-control' placeholder='Input your image link...' />
+                                                <textarea className=" mt-3" name="description" placeholder={`Hey ${userData.fullName}, What are you thinking?`}
+                                                    value={content} onChange={e => setContent(e.target.value)}></textarea>
+                                                <input className='form-control' placeholder='Input your image link...'
+                                                    value={img_url} onChange={e => setImg_url(e.target.value)} />
                                             </div>
                                         </div>
                                     </div>
@@ -64,11 +113,10 @@ export const ModalPostSubmission = (props: any) => {
                         <i className="fas fa-ellipsis-h" style={{ color: "gray" }}></i>
                     </div>
                 </div>
-                <div className='btn btn-primary' style={{ width: "100%", fontWeight: "bold" }}>
+                <button className='btn btn-primary' style={{ width: "100%", fontWeight: "bold" }} onClick={handlePost} disabled={isPostDisabled}>
                     Post
-                </div>
+                </button>
             </ModalFooter>
         </Modal>
     )
-
 }
