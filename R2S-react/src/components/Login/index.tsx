@@ -11,6 +11,8 @@ import axios, { AxiosResponse } from 'axios';
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface ResponseData {
   errCode: number;
@@ -48,6 +50,16 @@ export const LoginForm = () => {
         const response: AxiosResponse<ResponseData> = await handleLoginApi(email, password);
 
         if (response.data && response.data.errCode !== 0) {
+          toast.error(<span onClick={() => toast.dismiss()}> Login failed!</span>, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
           setErrMessage(response.data.message);
         }
         if (response.data && response.data.errCode === 0) {
@@ -55,6 +67,16 @@ export const LoginForm = () => {
           // userLoginSuccess(response.data.user)
           dispath({ type: Actions.USER_LOGIN_SUCCESS, userInfo: response.data.user })
           console.log('login success')
+          toast.success(<span onClick={() => toast.dismiss()}> Login success!</span>, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
           navigate("/");
         }
       } catch (error) {
@@ -110,6 +132,8 @@ export const LoginForm = () => {
               </div>
             </div>
           </form>
+          <ToastContainer
+          />
         </div>
       </div>
     </div>
