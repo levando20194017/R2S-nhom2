@@ -11,6 +11,7 @@ import LoginPage from "./screens/Login";
 import store from "./store";
 import { Provider } from "react-redux";
 import { Home } from "./screens/Home";
+import { HomePage } from "./components/HomePage";
 import SignUpPage from "./screens/SignUp";
 import ProfilePage from "./screens/Profile";
 import ForgotPasswordPage from "./screens/ForgotPassword";
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/home",
-        element: <Home />,
+        element: <HomePage />,
       },
       {
         path: "/profile",
