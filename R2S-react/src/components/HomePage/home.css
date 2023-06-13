@@ -1,0 +1,13 @@
+.card  {
+    background-position: center;
+    height: 80px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.avatar-img {
+    height: 50px;
+    width: 50px; ;
+    vertical-align: middle;
+    border: radius 0.4em;
+}
+ 
