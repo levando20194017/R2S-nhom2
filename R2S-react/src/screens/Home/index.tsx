@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react"
+import { HomePage } from "../../components/HomePage";
+import { HeaderHomepage } from "../../components/HeaderHomepage";
 import { Prev } from "react-bootstrap/esm/PageItem"
 import axios, { AxiosResponse } from 'axios';
 import { getAllUsers, createNewUserService, deleteUserService, editUserService } from '../../services/userService';
@@ -67,7 +69,7 @@ export const Home = () => {
   }, [user]);
   return (
     <div>
-      <h2>Welcome to React 101!</h2>
+      <HomePage/>
       {users.map((user) => {
         return (
           <div className="mt-5 modal-user" key={user.id}>

@@ -1,6 +1,7 @@
 import { Header } from "./components/Header";
 import { useEffect } from "react";
 import "./App.css";
+import SignUpPage from "./screens/SignUp";
 
 function App() {
   //...render
@@ -20,6 +21,7 @@ function App() {
 }
 
 export default App;
+
 
 /**
  * where to call API (API call is asynchronous code )
