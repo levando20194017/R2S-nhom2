@@ -1,12 +1,19 @@
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
+import { useState } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import "./style.css";
+import DrawerApp from "../Drawer";
 
 export const Header = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+    const handleDrawerToggle = () => {
+        setMobileOpen(!mobileOpen);
+    };
   return (
     <div className="headerContainer">
       <Navbar bg="dark" variant="dark">
@@ -20,6 +27,7 @@ export const Header = () => {
           >
             <Link to="/major">Major</Link>
             <Link to="/student">Student</Link>
+            <DrawerApp />
           </Nav>
 
           <Navbar.Collapse className="justify-content-end">

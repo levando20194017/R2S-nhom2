@@ -3,6 +3,10 @@ import "./home.css";
 import {Container, Row, Col, Image} from 'react-bootstrap';
 import background from "../../assets/img/background.jpg"
 import'bootstrap-icons/font/bootstrap-icons.css';
+import Offcanvas from 'react-bootstrap/Offcanvas';
+import { /* everything else */ } from 'react-bootstrap' ;
+import DrawerApp from "../Drawer";
+
 
 
 export const HomePage = () => {
@@ -25,7 +29,7 @@ export const HomePage = () => {
                                     <button type="button" className="btn-close text-reset ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                                 </div>
                                 <div className="offcanvas-body d-block px-2 px-lg-0">
-                                    <div className="card overflow-hidden">
+                                    <div className="card">
                                         <div className="card-body pt-0">
                                             <div className="h-50px"></div>
                                             <div className="text-center">
@@ -34,9 +38,11 @@ export const HomePage = () => {
                                                         <img className="avatar-img rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" />
                                                     </a>
                                                 </div>
-                                                <h5 className="mb-0">
+                                                <h5 className="mb-2">
                                                     <a href="#!"> Le Van Do </a>
                                                 </h5>
+                                                <p className="mb-3">Hello mọi người tôi là Lê Văn Do.</p>
+
                                                 <div className="hstack gap-2 gap-xl-3 justify-content-center">
                                                     <div>
                                                         <h6 className="mb-0">2</h6>
@@ -106,6 +112,7 @@ export const HomePage = () => {
                                     </div>
                                 </div>
                             </div>
+                            
                         </nav>
                     </div>
                     <div className="col-md-8 col-lg-6 vstack gap-4">
@@ -137,13 +144,13 @@ export const HomePage = () => {
                             <div>
                                 <ul className="nav nav-pills nav-stack small fw-normal">
                                     <li className="nav-item">
-                                        <a className="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#feedActionPhoto" >
+                                        <a className="nav-link bg-light py-1 px-2 mb" href="#!" data-bs-toggle="modal" data-bs-target="#feedActionPhoto" >
                                             <i className="bi bi-image-fill text-success pe-2"></i>
                                             Photo
                                         </a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#feedActionVideo">
+                                        <a className="nav-link bg-light py-1 px-2 mb" href="#!" data-bs-toggle="modal" data-bs-target="#feedActionVideo">
                                             <i className="bi bi-camera-reels-fill text-info pe-2"></i>
                                             Video
                                         </a>
