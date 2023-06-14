@@ -113,7 +113,7 @@ let createNewUser = (data) => {
                     address: data.address,
                     gender: data.gender === '1' ? true : false,
                     phoneNumber: data.phoneNumber,
-                    img_url: data.gender === '1' ? 'https://cdn2.iconfinder.com/data/icons/flat-style-svg-icons-part-1/512/user_man_male_profile_account-512.png' : 'https://cdn2.iconfinder.com/data/icons/peppyicons/512/women_blue-512.png',
+                    img_url: data.gender === '1' ? 'https://bootdey.com/img/Content/avatar/avatar7.png' : 'https://bootdey.com/img/Content/avatar/avatar8.png',
                     role: false
                 })
                 resolve({
