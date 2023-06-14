@@ -1,0 +1,37 @@
+<<<<<<< HEAD:R2S-react/src/components/HomePage/home.css
+
+=======
+.cardx {
+    background-position: center;
+    height: 80px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+>>>>>>> ad9ed5cce6e6a9d7c858e3943b8b53cdcc8f2920:R2S-react/src/screens/HomePage/home.css
+
+.avatar-img {
+    height: 50px;
+    width: 50px;
+    ;
+    vertical-align: middle;
+    border: radius 0.4em;
+}
+<<<<<<< HEAD:R2S-react/src/components/HomePage/home.css
+.background-img {
+    position: center;
+    size: cover;
+    height: 80px;
+}
+.nav-item {
+    padding: 5px;
+=======
+
+.nav-link-secondary a {
+    cursor: pointer;
+}
+
+.view-more {
+    background: rgb(209, 207, 207);
+    font-weight: bold;
+>>>>>>> ad9ed5cce6e6a9d7c858e3943b8b53cdcc8f2920:R2S-react/src/screens/HomePage/home.css
+}
