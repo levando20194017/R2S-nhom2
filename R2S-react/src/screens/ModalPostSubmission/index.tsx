@@ -5,6 +5,8 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { useSelector } from 'react-redux';
 import { handleAddNewPost } from '../../services/postService';
 import axios, { AxiosResponse } from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface ResponseData {
     errCode: number;
@@ -29,11 +31,11 @@ export const ModalPostSubmission = (props: any) => {
         setIsPostDisabled(content.trim().length === 0 && img_url.trim().length === 0);
     }, [content, img_url]);
 
-    useEffect(() => {
-        if (message) {
-            alert(message);
-        }
-    }, [message]);
+    // useEffect(() => {
+    //     if (message) {
+    //         alert(message);
+    //     }
+    // }, [message]);
     const handlePost = async () => {
 
         const data = {
@@ -44,11 +46,31 @@ export const ModalPostSubmission = (props: any) => {
         try {
             const response: AxiosResponse<ResponseData> = await handleAddNewPost(userData.id, content, img_url);
             if (response.data && response.data.errCode === 0) {
-                setMessage(response.data.message);
+                // setMessage(response.data.message);
+                toast.success(<span onClick={() => toast.dismiss()}> Add new post success!</span>, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
                 toggle();
             }
             if (response.data && response.data.errCode !== 0) {
                 setMessage(response.data.message);
+                toast.error(<span onClick={() => toast.dismiss()}> Add new post failed!</span>, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
             }
 
         } catch (error) {
@@ -65,6 +87,7 @@ export const ModalPostSubmission = (props: any) => {
             size='lg'
             centered
         >
+            <ToastContainer />
             <ModalHeader toggle={() => { toggle() }}>
                 Create a new post
             </ModalHeader>

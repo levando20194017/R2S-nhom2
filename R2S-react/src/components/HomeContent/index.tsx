@@ -1,14 +1,68 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import background from "../../assets/img/background.jpg"
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Scrollbars from "react-custom-scrollbars";
-
-
+import { useSelector } from "react-redux";
+import { Link } from 'react-router-dom';
+import { getAllPostById } from "../../services/postService";
+import { getAllUsers } from "../../services/userService";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import { ModalPostSubmission } from "../../screens/ModalPostSubmission";
+interface Post {
+    img_url: string;
+    content: string;
+}
+interface User {
+    fullName: string;
+    img_url: string
+}
 export const HomeContentForm = () => {
+    const [users, setUsers] = useState<User[]>([{
+        img_url: '',
+        fullName: ''
+    }])
+    const user = useSelector(state => (state as any).user)
+    const userData = user.userInfo;
+
+    const [listPosts, setListPosts] = useState<Post[]>([{
+        img_url: '',
+        content: ''
+    }]);
+    useEffect(() => {
+        let isMounted = true;
+        const fetchData = async () => {
+            const data = await getAllPostById('ALL');
+            setListPosts(data.data.posts);
+            if (isMounted) {
+                let userArray = [];
+                for (let i = 0; i < data.data.posts.length; i++) {
+                    const response = await getAllUsers(data.data.posts[i].userID);
+                    const user = response.data.users;
+                    userArray.push(user);
+                }
+                setUsers(userArray);
+            }
+        };
+        fetchData();
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+    const [isOpenModal, setIsOpenModal] = useState<Boolean>(false)
+    const handleAddPostSubmission = () => {
+        setIsOpenModal(true);
+    }
+    const togglePostSubmissionModal = () => {
+        setIsOpenModal(!isOpenModal)
+    }
+
+
+
     return (
         <>
-            <div className="col-md-8 col-lg-6 vstack gap-4">
+            <div className="col-md-8 col-lg-6 vstack gap-4" style={{ marginLeft: "-10px" }}>
                 <Scrollbars style={{ height: "92vh" }}>
                     <div className="d-flex gap-2 mb-n3">
                         <div className="position-relative">
@@ -24,21 +78,29 @@ export const HomeContentForm = () => {
                         <div id="stories" className="storiesWrapper stories-square stories user-icon carousel scroll-enable stories user-icon carousel snapgram ">
                         </div>
                     </div>
-                    <div className="cardx card-body mt-2">
+                    <div className="cardx card card-body">
                         <div className="d-flex mb-3">
                             <div className="avatar avatar-xs me-2">
-                                <a href="#!">
-                                    <img className="avatar-img rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" />
-                                </a>
+                                <Link to="/profile">
+                                    <img className="avatar-img rounded-circle" src={userData.img_url} alt="Avatar" />
+                                </Link>
+
                             </div>
                             <form className="w-100" >
-                                <textarea className="form-control pe-4 border-0" rows={2} data-autoresize placeholder="Share yours thoughts..."></textarea>
+                                <textarea className="form-control pe-4 border-0"
+                                    style={{ cursor: "pointer" }}
+                                    rows={2} data-autoresize placeholder="Share yours thoughts..."
+                                    onClick={handleAddPostSubmission}></textarea>
+                                <ModalPostSubmission
+                                    isOpen={isOpenModal}
+                                    toggleFromParent={togglePostSubmissionModal}
+                                />
                             </form>
                         </div>
                         <div>
                             <ul className="nav nav-pills nav-stack small fw-normal">
                                 <li className="nav-item">
-                                    <a className="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#feedActionPhoto" >
+                                    <a className="nav-link bg-light py-1 px-2 mb-0" href="#!" data-bs-toggle="modal" data-bs-target="#feedActionPhoto">
                                         <i className="bi bi-image-fill text-success pe-2"></i>
                                         Photo
                                     </a>
@@ -49,74 +111,69 @@ export const HomeContentForm = () => {
                                         Video
                                     </a>
                                 </li>
-
-                                <li className="nav-item dropdown ms-lg-auto">
-                                    <a className="nav-link bg-light py-1 px-2 mb-0" href="#" id="feedActionShare" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i className="bi bi-three-dots"></i>
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                     </div>
-                    <div className="cardx">
-                        <div className="card-header border-0 pb-0">
-                            <div className="d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center mt-5">
-                                    <div className="avatar avatar-story me-2">
-                                        <a href="#!"> <img className="avatar-img rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" /> </a>
-                                    </div>
-                                    <div>
-                                        <div className="nav nav-divider">
-                                            <h6 className="nav-item card-title mb-0"> <a href="#!"> Le Van Do </a></h6>
-                                            <span className="nav-item small">2hr</span>
+                    {listPosts && listPosts.map((post, index) => {
+                        return (
+                            <div className="cardx card mt-5" style={{ height: "auto", marginBottom: "-30px" }}>
+                                <div className="card-header border-0 pb-0">
+                                    <div className="d-flex align-items-center justify-content-between">
+                                        <div className="d-flex align-items-center">
+                                            <div className="avatar avatar-story me-2">
+                                                <a href="#!"> <img className="avatar-img rounded-circle" src={users[index]?.img_url} alt="Admin" /> </a>
+                                            </div>
+                                            <div>
+                                                <div className="nav nav-divider">
+                                                    <h6 className="nav-item card-title mb-0"> <a href="#!" style={{ color: "black", textDecoration: "none" }}>{users[index]?.fullName}</a></h6>
+                                                    {/* <span className="nav-item small">6:30am 14/6/2023</span> */}
+                                                </div>
+                                                <p className="mb-0 small">6 hours. <i className="fas fa-globe-asia"></i></p>
+                                            </div>
                                         </div>
-                                        <p className="mb-0 small">Public</p>
+
+                                        <div className="dropdown">
+                                            <a href="#" className="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i className="bi bi-three-dots"></i>
+                                            </a>
+                                            <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
+                                                <li><a className="dropdown-item" href="#"> <i className="bi bi-bookmark fa-fw pe-2"></i>Save post</a></li>
+                                                <li><a className="dropdown-item" href="#"> <i className="bi bi-person-x fa-fw pe-2"></i>Unfollow lori ferguson </a></li>
+                                                <li><a className="dropdown-item" href="#"> <i className="bi bi-x-circle fa-fw pe-2"></i>Hide post</a></li>
+                                                <li><a className="dropdown-item" href="#"> <i className="bi bi-slash-circle fa-fw pe-2"></i>Block</a></li>
+                                                <li><hr className="dropdown-divider" /></li>
+                                                <li><a className="dropdown-item" href="#"> <i className="bi bi-flag fa-fw pe-2"></i>Report post</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div className="dropdown">
-                                    <a href="#" className="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i className="bi bi-three-dots"></i>
-                                    </a>
-
-                                    <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
-                                        <li><a className="dropdown-item" href="#"> <i className="bi bi-bookmark fa-fw pe-2"></i>Save post</a></li>
-                                        <li><a className="dropdown-item" href="#"> <i className="bi bi-person-x fa-fw pe-2"></i>Unfollow lori ferguson </a></li>
-                                        <li><a className="dropdown-item" href="#"> <i className="bi bi-x-circle fa-fw pe-2"></i>Hide post</a></li>
-                                        <li><a className="dropdown-item" href="#"> <i className="bi bi-slash-circle fa-fw pe-2"></i>Block</a></li>
-                                        <li><hr className="dropdown-divider" /></li>
-                                        <li><a className="dropdown-item" href="#"> <i className="bi bi-flag fa-fw pe-2"></i>Report post</a></li>
-                                    </ul>
+                                <div className="card-body">
+                                    <p>{post.content}</p>
+                                    <img className="card-img" src={post.img_url} alt=" " />
                                 </div>
-                            </div>
-                        </div>
-                        <div className="card-body">
-                            <p>Hello</p>
-                            <img className="card-img" src={background} alt=" " />
-                        </div>
-                        <ul className="nav nav-stack py-3 small">
-                            <li className="nav-item">
-                                <a className="nav-link active" href="#!" data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title="Frances Guerrero<br> Lori Stevens<br> Billy Vasquez<br> Judy Nguyen<br> Larry Lawson<br> Amanda Reed<br> Louis Crawford"> <i className="bi bi-hand-thumbs-up-fill pe-1"></i>Liked (56)</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#!"> <i className="bi bi-chat-fill pe-1"></i>Comments (12)</a>
-                            </li>
-                            <li className="nav-item dropdown ms-sm-auto">
-                                <a className="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i className="bi bi-reply-fill flip-horizontal ps-1"></i>
-                                    Share (3)
-                                </a>
-                                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
-                                    <li><a className="dropdown-item" href="#"> <i className="bi bi-envelope fa-fw pe-2"></i>Send via Direct Message</a></li>
-                                    <li><a className="dropdown-item" href="#"> <i className="bi bi-bookmark-check fa-fw pe-2"></i>Bookmark </a></li>
-                                    <li><a className="dropdown-item" href="#"> <i className="bi bi-link fa-fw pe-2"></i>Copy link to post</a></li>
-                                    <li><a className="dropdown-item" href="#"> <i className="bi bi-share fa-fw pe-2"></i>Share post via …</a></li>
-                                    <li><hr className="dropdown-divider" /></li>
-                                    <li><a className="dropdown-item" href="#"> <i className="bi bi-pencil-square fa-fw pe-2"></i>Share to News Feed</a></li>
+                                <ul className="nav nav-stack py-3 small card-footer">
+                                    <li className="nav-item">
+                                        <a className="nav-link active" href="#!" data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title="Frances Guerrero<br> Lori Stevens<br> Billy Vasquez<br> Judy Nguyen<br> Larry Lawson<br> Amanda Reed<br> Louis Crawford"> <i className="bi bi-hand-thumbs-up-fill pe-1"></i>Liked (56)</a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a className="nav-link" href="#!"> <i className="bi bi-chat-fill pe-1"></i>Comments (12)</a>
+                                    </li>
+                                    <li className="nav-item dropdown ms-sm-auto">
+                                        <a className="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i className="bi bi-reply-fill flip-horizontal ps-1"></i>
+                                            Share (3)
+                                        </a>
+                                        <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
+                                            <li><a className="dropdown-item" href="#"> <i className="bi bi-envelope fa-fw pe-2"></i>Send via Direct Message</a></li>
+                                            <li><a className="dropdown-item" href="#"> <i className="bi bi-bookmark-check fa-fw pe-2"></i>Bookmark </a></li>
+                                            <li><a className="dropdown-item" href="#"> <i className="bi bi-link fa-fw pe-2"></i>Copy link to post</a></li>
+                                            <li><a className="dropdown-item" href="#"> <i className="bi bi-share fa-fw pe-2"></i>Share post via …</a></li>
+                                            <li><hr className="dropdown-divider" /></li>
+                                            <li><a className="dropdown-item" href="#"> <i className="bi bi-pencil-square fa-fw pe-2"></i>Share to News Feed</a></li>
+                                        </ul>
+                                    </li>
                                 </ul>
-                            </li>
-                        </ul>
-                        <div className="d-flex mb-3">
+                                {/* <div className="d-flex mb-3">
                             <div className="avatar avatar-xs me-2">
                                 <a href="#!"> <img className="avatar-img rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="" /> </a>
                             </div>
@@ -126,8 +183,10 @@ export const HomeContentForm = () => {
                                     <i className="bi bi-send-fill"> </i>
                                 </button>
                             </form>
-                        </div>
-                    </div>
+                        </div> */}
+                            </div>
+                        )
+                    })}
                 </Scrollbars>
             </div>
         </>

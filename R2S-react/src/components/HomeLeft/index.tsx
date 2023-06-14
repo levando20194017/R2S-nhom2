@@ -44,7 +44,7 @@ export const HomeLeftForm = (props: any) => {
                                 <div className="text-center">
                                     <div className="avatar avatar-lg mt-n5 mb-3">
                                         <Link to="/profile">
-                                            <img className="avatar-img rounded-circle" src={userData.img_url} alt="Admin" />
+                                            <img className="avatar-img rounded-circle" src={userData.img_url} alt="Avatar" />
                                         </Link>
                                     </div>
                                     <h5 className="mb-0">

@@ -33,7 +33,7 @@ export const HomeRightForm = (props: any) => {
         fetchData();
     }, [])
     return (
-        <div className="col-lg-3">
+        <div className="col-lg-3" style={{ marginLeft: "5px" }}>
             <div className="col-sm-6 col-lg-12">
                 <Scrollbars style={{ height: "92vh" }}>
                     <div className="cardx">
