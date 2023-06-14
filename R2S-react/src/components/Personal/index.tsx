@@ -8,6 +8,8 @@ import "./style.css"
 import Spinner from "react-bootstrap/Spinner";
 import Cookies from 'js-cookie';
 import { editUserService } from "../../services/userService";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface UserData {
     fullName: string;
@@ -50,6 +52,16 @@ export const PersonalForm = () => {
         if (result.data && result.data.errCode === 0) {
             dispath({ type: Actions.UPDATE_USER, userInfo: updatedUserData })
             setIsEditing(false);
+            toast.success(<span onClick={() => toast.dismiss()}> Successful change!</span>, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
         }
     };
     useEffect(() => {
@@ -82,6 +94,7 @@ export const PersonalForm = () => {
     };
     return (
         <div className="main-profile">
+            <ToastContainer />
             <div className="profile-main-body">
                 <div className="row gutters-sm">
                     <div className="col-md-4 mb-3">
@@ -181,16 +194,8 @@ export const PersonalForm = () => {
                                         <h6 className="mb-0">Email</h6>
                                     </div>
                                     <div className="col-sm-9 text-secondary">
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                name="email"
-                                                value={updatedUserData.email}
-                                                onChange={handleInputChange}
-                                            />
-                                        ) : (
-                                            userData.email
-                                        )}
+
+                                        {userData.email}
                                     </div>
                                 </div>
                                 <hr />

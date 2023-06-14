@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { String } from 'lodash';
 
 const handleLoginApi = (userEmail: string, userPassword: string) => {
     return axios.post('http://localhost:8080/api/login', { email: userEmail, password: userPassword });
@@ -29,5 +30,7 @@ const deleteUserService = (userId: string) => {
 const editUserService = (data: UserData) => {
     return axios.put('http://localhost:8080/api/edit-user', data);
 }
-
-export { handleLoginApi, getAllUsers, createNewUserService, deleteUserService, editUserService, handleSignUpApi }; 
+const userChangePassword = (id: string, curPassword: string, newPassword: string) => {
+    return axios.put('http://localhost:8080/api/user-changepassword', { id: id, curPassword: curPassword, newPassword: newPassword })
+}
+export { handleLoginApi, getAllUsers, createNewUserService, deleteUserService, editUserService, handleSignUpApi, userChangePassword }; 

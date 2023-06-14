@@ -10,8 +10,8 @@ const getAllCommentById = (inputId: string) => {
 const getAllLikesOfComment = (inputId: string) => {
     return axios.get(`http://localhost:8080/api/comment/get-all-likes?id=${inputId}`)
 }
-const handleLikeComment = (userID: string, postID: string) => {
-    return axios.post('http://localhost:8080/api/comment/isliked', { userID: userID, postID: postID });
+const handleLikeComment = (userID: string, commentID: string) => {
+    return axios.post('http://localhost:8080/api/comment/isliked', { userID: userID, commentID: commentID });
 }
 
 export { handleAddNewComment, getAllCommentById, getAllLikesOfComment, handleLikeComment };

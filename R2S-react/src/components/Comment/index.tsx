@@ -1,13 +1,21 @@
 import './style.css'
 import React, { Component } from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getAllUsers } from '../../services/userService';
+import { getAllLikesOfComment, handleLikeComment } from '../../services/commentService';
 interface UserComment {
     id: string;
     fullName: string;
     img_url: string;
 }
+interface LikeComment {
+    id: string;
+    userID: string;
+    commentID: string;
+}
 export const CommentForm = (props: any) => {
+    const [likeComments, setLikeComments] = useState<LikeComment[]>([])
+    const [isLiked, setIsLiked] = useState<boolean>(false);
     const [userComment, setUserComment] = useState<UserComment>({
         id: '',
         fullName: '',
@@ -16,10 +24,30 @@ export const CommentForm = (props: any) => {
     useEffect(() => {
         const fetchData = async () => {
             const data = await getAllUsers(props.comment.userID);
-            setUserComment(data.data.users)
-        }
+            setUserComment(data.data.users);
+
+            const responseOfLikeComment = await getAllLikesOfComment(props.comment.id);
+            const likecomments = responseOfLikeComment.data.likes;
+            setLikeComments(likecomments);
+        };
         fetchData();
-    }, [props.comment.userID]);
+    }, [props.comment.userID, props.comment.id]);
+
+    const handleLikeThisComment = useCallback(async (commentID: string) => {
+        if (isLiked) return; // Kiểm tra giá trị isLiked hiện tại trước khi gửi request
+        console.log(commentID, props.userID);
+
+        const response = await handleLikeComment(props.userID, commentID);
+        if (response.data.errCode === 1) {
+            setIsLiked((prevIsLiked) => !prevIsLiked); // Cập nhật giá trị isLiked dựa trên giá trị hiện tại
+            const responseOfLikeComment = await getAllLikesOfComment(commentID);
+            const likecomments = responseOfLikeComment?.data?.likes;
+            setLikeComments(likecomments ?? []);
+        } else {
+            console.log('Error'); // Xử lý lỗi ở đây
+        }
+    }, [isLiked, props.userID]);
+
 
     return (
         <div className="media d-flex">
@@ -32,7 +60,11 @@ export const CommentForm = (props: any) => {
                 <div className='d-flex' style={{ justifyContent: "space-between" }}>
                     <ul className="list-unstyled list-inline media-detail pull-lef d-flex">
                         <li><i className="fa fa-calendar"></i>{props.comment.createdAt}</li>
-                        <li><i className="fa fa-thumbs-up"></i>13</li>
+                        <li>
+                            {isLiked ? <i className="fa fa-thumbs-up" style={{ color: "blue" }} onClick={() => { handleLikeThisComment(props.comment.id) }}></i> :
+                                <i className="fa fa-thumbs-up" onClick={() => { handleLikeThisComment(props.comment.id) }}></i>}
+                            {likeComments && likeComments.length ? `${likeComments.length}` : ""}
+                        </li>
                     </ul>
                     <ul className="list-unstyled list-inline media-detail pull-right d-flex">
                         {props.userID === props.comment.userID ? <li><a href=''>Edit</a></li> : ""}

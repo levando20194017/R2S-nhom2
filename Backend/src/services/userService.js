@@ -197,11 +197,52 @@ let updateUserData = (data) => {
         }
     });
 };
+let handleChangePassword = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve({
+                    errCode: 2,
+                    message: "Missing required parameters!"
+                })
+            }
+            let hashNewPasswordFormBcrypt = await hashUserPassword(data.newPassword);
+            let user = await db.User.findOne({
+                where: { id: data.id },
+                raw: false
+            });
+            if (user) {
+                const isMatch = await bcrypt.compare(data.curPassword, user.password);
+                if (isMatch) {
+                    user.password = hashNewPasswordFormBcrypt
+                    await user.save();
+                    resolve({
+                        errCode: 0,
+                        message: "You have successfully changed your password!"
+                    })
+                } else {
+                    resolve({
+                        errCode: 1,
+                        message: "You have entered the wrong current password!"
+                    })
+                }
+            } else {
+                resolve({
+                    errCode: 3,
+                    message: "User don't exist!"
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
 module.exports = {
     handleUserLogin: handleUserLogin,
     checkUserEmail: checkUserEmail,
     getAllUsers: getAllUsers,
     createNewUser: createNewUser,
     deleteUser: deleteUser,
-    updateUserData: updateUserData
+    updateUserData: updateUserData,
+    handleChangePassword: handleChangePassword
 }

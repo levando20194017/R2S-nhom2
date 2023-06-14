@@ -159,11 +159,12 @@ export const ModalPost = (props: any) => {
                                                 <div className="row">
                                                     <div className="">
                                                         <h3>{numberOfComment > 1 ? `${numberOfComment} comments` : numberOfComment ? `${numberOfComment} comment` : ""}</h3>
-                                                        {listComments && listComments.map((comment) => {
+                                                        {listComments && listComments.map((comment, index) => {
                                                             return <div>
                                                                 <CommentForm
                                                                     comment={comment}
-                                                                    userID={props.userID} />
+                                                                    userID={props.userID}
+                                                                    index={index} />
                                                             </div>
                                                         })}
                                                     </div>
