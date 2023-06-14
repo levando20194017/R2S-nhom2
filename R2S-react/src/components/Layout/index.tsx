@@ -37,7 +37,7 @@ export const Layout = () => {
 
   return (
     <div>
-      <HeaderHomepage/>
+      <HeaderHomepage />
       <div>
         <Outlet />
         {/* {posts.length <= 0 ? (

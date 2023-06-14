@@ -1,23 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Product from "./screens/Product";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Layout } from "./components/Layout";
-import ProductDetail from "./screens/Product/ProductDetail";
 import LoginPage from "./screens/Login";
 import store from "./store";
 import { Provider } from "react-redux";
-import { Home } from "./screens/Home";
-import { HomePage } from "./components/HomePage";
+import { HomePage } from "./screens/HomePage";
 import SignUpPage from "./screens/SignUp";
 import ProfilePage from "./screens/Profile";
 import ForgotPasswordPage from "./screens/ForgotPassword";
 import ChangePasswordPage from "./screens/ChangePassword";
-
-import { CommentForm } from "./components/Comment";
 
 const router = createBrowserRouter([
   {
@@ -26,24 +21,12 @@ const router = createBrowserRouter([
     errorElement: <p>Not found</p>,
     children: [
       {
-        path: "/student",
-        element: <h1>Student Page</h1>,
-      },
-      {
-        path: "/home",
+        path: "/",
         element: <HomePage />,
       },
       {
         path: "/profile",
         element: <ProfilePage />,
-      },
-      {
-        path: "/product",
-        element: <Product />,
-      },
-      {
-        path: "/product/:id",
-        element: <ProductDetail />,
       },
     ],
   },
@@ -62,10 +45,6 @@ const router = createBrowserRouter([
   {
     path: "/changePassword",
     element: <ChangePasswordPage />,
-  },
-  {
-    path: "/comment",
-    element: <CommentForm />,
   },
 ]);
 
