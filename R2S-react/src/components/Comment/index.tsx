@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { getAllUsers } from '../../services/userService';
 import { getAllLikesOfComment, handleLikeComment } from '../../services/commentService';
+import moment from 'moment';
 interface UserComment {
     id: string;
     fullName: string;
@@ -59,7 +60,7 @@ export const CommentForm = (props: any) => {
                 <p>{props.comment.content}</p>
                 <div className='d-flex' style={{ justifyContent: "space-between" }}>
                     <ul className="list-unstyled list-inline media-detail pull-lef d-flex">
-                        <li><i className="fa fa-calendar"></i>{props.comment.createdAt}</li>
+                        <li><i className="fa fa-calendar"></i>{moment(`${props.comment.createdAt}`).format('HH:mm DD/MM/YYYY')}.</li>
                         <li>
                             {isLiked ? <i className="fa fa-thumbs-up" style={{ color: "blue" }} onClick={() => { handleLikeThisComment(props.comment.id) }}></i> :
                                 <i className="fa fa-thumbs-up" onClick={() => { handleLikeThisComment(props.comment.id) }}></i>}

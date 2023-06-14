@@ -9,16 +9,38 @@ import { getAllPostById } from "../../services/postService";
 import { getAllUsers } from "../../services/userService";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
+import { handleLikePost } from "../../services/postService";
+import { getAllCommentById } from "../../services/commentService";
+import { getAllLikesOfPost } from "../../services/postService";
 import { ModalPostSubmission } from "../../screens/ModalPostSubmission";
+import { ModalPost } from "../../screens/ModalPost";
+import moment from 'moment';
 interface Post {
+    id: string;
     img_url: string;
+    createdAt: string;
     content: string;
+    isOpenModalComment: boolean;
+}
+interface LikePost {
+    id: string;
+    userID: string;
+    postID: string;
+}
+interface Comment {
+    id: string;
+    userID: string;
+    content: string;
+    createdAt: string;
 }
 interface User {
     fullName: string;
     img_url: string
 }
 export const HomeContentForm = () => {
+    const [listComments, setListComments] = useState<Comment[][]>([])
+    const [likePosts, setLikePosts] = useState<LikePost[][]>([])
+    const [isLiked, setIsLiked] = useState<boolean[]>([false]);
     const [users, setUsers] = useState<User[]>([{
         img_url: '',
         fullName: ''
@@ -28,8 +50,19 @@ export const HomeContentForm = () => {
 
     const [listPosts, setListPosts] = useState<Post[]>([{
         img_url: '',
-        content: ''
+        content: '',
+        id: '',
+        createdAt: '',
+        isOpenModalComment: false
     }]);
+    const handleAddNewComment = (post: Post) => {
+        const updatedPost = { ...post, isOpenModalComment: true };
+        setListPosts(listPosts.map(p => p.id === post.id ? updatedPost : p));
+    }
+    const toggleCommentModal = (post: Post) => {
+        const updatedPost = { ...post, isOpenModalComment: !post.isOpenModalComment };
+        setListPosts(listPosts.map(p => p.id === post.id ? updatedPost : p));
+    };
     useEffect(() => {
         let isMounted = true;
         const fetchData = async () => {
@@ -37,12 +70,24 @@ export const HomeContentForm = () => {
             setListPosts(data.data.posts);
             if (isMounted) {
                 let userArray = [];
+                let commentsArray = [];
+                let likePostsArray = [];
                 for (let i = 0; i < data.data.posts.length; i++) {
                     const response = await getAllUsers(data.data.posts[i].userID);
                     const user = response.data.users;
                     userArray.push(user);
+
+                    const responseOfCommentPost = await getAllCommentById(data.data.posts[i].id);
+                    const comments = responseOfCommentPost.data.comments;
+                    commentsArray.push(comments);
+
+                    const responseOfLikePost = await getAllLikesOfPost(data.data.posts[i].id);
+                    const likeposts = responseOfLikePost.data.likes;
+                    likePostsArray.push(likeposts);
                 }
                 setUsers(userArray);
+                setListComments(commentsArray);
+                setLikePosts(likePostsArray);
             }
         };
         fetchData();
@@ -58,6 +103,48 @@ export const HomeContentForm = () => {
         setIsOpenModal(!isOpenModal)
     }
 
+    // Lưu trạng thái like của bài viết vào localStorage
+    const handleLikeThisPost = async (index: number, postID: string) => {
+        const response = await handleLikePost(userData.id, postID);
+        if (response.data.errCode === 1) {
+            const newIsLiked = [...isLiked];
+            newIsLiked[index] = false;
+            setIsLiked(newIsLiked);
+            localStorage.setItem(postID, false.toString()); // Lưu giá trị false vào localStorage
+
+            const likePostsArray = [...likePosts]
+            const responseOfLikePost = await getAllLikesOfPost(postID);
+            const likeposts = responseOfLikePost.data.likes;
+            likePostsArray[index] = likeposts;
+            setLikePosts(likePostsArray);
+
+            // ...
+        } else {
+            const newIsLiked = [...isLiked];
+            newIsLiked[index] = true;
+            setIsLiked(newIsLiked);
+            localStorage.setItem(postID, true.toString()); // Lưu giá trị true vào localStorage
+
+            const likePostsArray = [...likePosts]
+            const responseOfLikePost = await getAllLikesOfPost(postID);
+            const likeposts = responseOfLikePost.data.likes;
+            likePostsArray[index] = likeposts;
+            setLikePosts(likePostsArray);
+            // ...
+        }
+    }
+
+    // Lấy giá trị trạng thái like từ localStorage và thiết lập màu xanh cho nút like
+    useEffect(() => {
+        const newIsLiked = [...isLiked];
+        listPosts.forEach((post, index) => {
+            const isPostLiked = localStorage.getItem(post.id); // Lấy giá trị trạng thái like từ localStorage
+            if (isPostLiked === "true") {
+                newIsLiked[index] = true;
+            }
+        });
+        setIsLiked(newIsLiked);
+    }, [listPosts]);
 
 
     return (
@@ -128,7 +215,7 @@ export const HomeContentForm = () => {
                                                     <h6 className="nav-item card-title mb-0"> <a href="#!" style={{ color: "black", textDecoration: "none" }}>{users[index]?.fullName}</a></h6>
                                                     {/* <span className="nav-item small">6:30am 14/6/2023</span> */}
                                                 </div>
-                                                <p className="mb-0 small">6 hours. <i className="fas fa-globe-asia"></i></p>
+                                                <p className="mb-0 small"> {moment(`${post.createdAt}`).format('HH:mm DD/MM/YYYY')}. <i className="fas fa-globe-asia"></i></p>
                                             </div>
                                         </div>
 
@@ -153,11 +240,34 @@ export const HomeContentForm = () => {
                                 </div>
                                 <ul className="nav nav-stack py-3 small card-footer">
                                     <li className="nav-item">
-                                        <a className="nav-link active" href="#!" data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" data-bs-custom-class="tooltip-text-start" data-bs-title="Frances Guerrero<br> Lori Stevens<br> Billy Vasquez<br> Judy Nguyen<br> Larry Lawson<br> Amanda Reed<br> Louis Crawford"> <i className="bi bi-hand-thumbs-up-fill pe-1"></i>Liked (56)</a>
+                                        {isLiked[index] ? (<a style={{ color: "blue" }}
+                                            className="nav-link active" href="#!" data-bs-container="body"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
+                                            data-bs-custom-class="tooltip-text-start"
+                                            onClick={() => handleLikeThisPost(index, post.id)}
+                                        > <i className="bi bi-hand-thumbs-up-fill pe-1"></i>Liked ({likePosts[index] && (likePosts[index].length)})</a>)
+                                            : (<a className="nav-link active" href="#!" data-bs-container="body"
+                                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
+                                                data-bs-custom-class="tooltip-text-start"
+                                                onClick={() => handleLikeThisPost(index, post.id)}
+                                            > <i className="bi bi-hand-thumbs-up-fill pe-1"></i>Liked ({likePosts[index] && (likePosts[index].length)})</a>)}
                                     </li>
-                                    <li className="nav-item">
-                                        <a className="nav-link" href="#!"> <i className="bi bi-chat-fill pe-1"></i>Comments (12)</a>
+                                    <li className="nav-item" onClick={() => handleAddNewComment(post)}>
+                                        <a className="nav-link" href="#!"> <i className="bi bi-chat-fill pe-1"></i>Comments ({listComments[index] && (listComments[index].length)})</a>
                                     </li>
+                                    <ModalPost
+                                        isOpen={post.isOpenModalComment}
+                                        toggleFromParent={() => toggleCommentModal(post)}
+                                        postId={post.id}
+                                        content={post.content}
+                                        img_urlPost={post.img_url}
+                                        userID={userData.id}
+                                        author={userData.fullName}
+                                        img_urlAuthor={userData.img_url}
+                                        createdAt={post.createdAt}
+                                        isLiked={isLiked[index]}
+                                        likePosts={likePosts[index]}
+                                    />
                                     <li className="nav-item dropdown ms-sm-auto">
                                         <a className="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i className="bi bi-reply-fill flip-horizontal ps-1"></i>

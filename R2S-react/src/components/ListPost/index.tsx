@@ -7,7 +7,7 @@ import { ModalPost } from "../../screens/ModalPost";
 import { getAllPostById, getAllLikesOfPost, handleLikePost } from "../../services/postService";
 import { useSelector } from 'react-redux';
 import { getAllCommentById } from "../../services/commentService";
-
+import moment from 'moment';
 interface Comment {
     id: string;
     userID: string;
@@ -156,7 +156,7 @@ export const ListPostForm = () => {
                                         </div>
                                         <div style={{ marginLeft: "8px" }}>
                                             <div style={{ fontWeight: "bold" }} className="author">{userData.fullName}</div>
-                                            <div className="text-secondary">{post.createdAt}. <i className="fas fa-globe-asia"></i></div>
+                                            <div className="text-secondary">{moment(`${post.createdAt}`).format('HH:mm DD/MM/YYYY')}. <i className="fas fa-globe-asia"></i></div>
                                         </div>
                                     </div>
                                     <div className=" col-1" style={{ fontSize: "30px", marginLeft: "50px" }}>
