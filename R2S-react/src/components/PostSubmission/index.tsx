@@ -20,7 +20,7 @@ export const PostSubmissionForm = () => {
                     <div className="card">
                         <div className="card-body d-flex mt-4">
                             <div className="col-1 offset-1">
-                                <img src={userData.img_url} alt="Avatar" className="rounded-circle"
+                                <img src={userData?.img_url} alt="Avatar" className="rounded-circle"
                                     width="75" height={75} />
                             </div>
                             <div className="inputPassword mt-3 col-9">

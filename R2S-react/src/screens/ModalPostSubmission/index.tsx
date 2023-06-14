@@ -78,7 +78,7 @@ export const ModalPostSubmission = (props: any) => {
                                         <div>
                                             <div className="d-flex">
                                                 <div>
-                                                    <img src={userData.img_url} alt="Avatar" className="rounded-circle"
+                                                    <img src={userData?.img_url} alt="Avatar" className="rounded-circle"
                                                         width="50" height={50} />
                                                 </div>
                                                 <div style={{ marginLeft: "8px" }}>

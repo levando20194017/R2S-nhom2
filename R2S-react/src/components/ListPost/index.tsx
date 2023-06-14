@@ -97,7 +97,7 @@ export const ListPostForm = () => {
         return () => {
             isMounted = false;
         };
-    }, [userData.id]);
+    }, []);
     // Lưu trạng thái like của bài viết vào localStorage
     const handleLikeThisPost = async (index: number, postID: string) => {
         const response = await handleLikePost(userData.id, postID);
