@@ -9,6 +9,7 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { getAllCommentById } from '../../services/commentService';
 import { handleAddNewComment } from '../../services/commentService';
 import axios, { AxiosResponse } from 'axios';
+import moment from 'moment';
 
 interface ResponseData {
     errCode: number;
@@ -106,7 +107,7 @@ export const ModalPost = (props: any) => {
                                                 </div>
                                                 <div style={{ marginLeft: "8px" }}>
                                                     <div style={{ fontWeight: "bold" }} className="author">{props.author}</div>
-                                                    <div className="text-secondary">{props.createdAt}. <i className="fas fa-globe-asia"></i></div>
+                                                    <div className="text-secondary">{moment(`${props.createdAt}`).format('HH:mm DD/MM/YYYY')}. <i className="fas fa-globe-asia"></i></div>
                                                 </div>
                                             </div>
                                             <div className=" col-1" style={{ fontSize: "30px", marginLeft: "50px" }}>
