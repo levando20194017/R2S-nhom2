@@ -283,17 +283,6 @@ export const HomeContentForm = () => {
                                         </ul>
                                     </li>
                                 </ul>
-                                {/* <div className="d-flex mb-3">
-                            <div className="avatar avatar-xs me-2">
-                                <a href="#!"> <img className="avatar-img rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="" /> </a>
-                            </div>
-                            <form className="nav nav-item w-100 position-relative">
-                                <textarea data-autoresize="" className="form-control pe-5 bg-light" rows={1} placeholder="Add a comment..."></textarea>
-                                <button className="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0" type="submit">
-                                    <i className="bi bi-send-fill"> </i>
-                                </button>
-                            </form>
-                        </div> */}
                             </div>
                         )
                     })}
