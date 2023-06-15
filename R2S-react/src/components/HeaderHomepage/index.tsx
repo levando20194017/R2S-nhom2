@@ -15,7 +15,7 @@ export const HeaderHomepage = () => {
             <header className="navbar-light  header-static bg-mode">
                 <nav className="navbar navbar-expand-lg">
                     <div className="container">
-                        <a className="navbar-brand" href="http://localhost:3000/home">
+                        <a className="navbar-brand" href="http://localhost:3000">
                             <img className="logo-img" src={logo} alt=" " />
                             <a>ShareSpace</a>
                         </a>

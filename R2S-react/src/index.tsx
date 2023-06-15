@@ -13,12 +13,12 @@ import SignUpPage from "./screens/SignUp";
 import ProfilePage from "./screens/Profile";
 import ForgotPasswordPage from "./screens/ForgotPassword";
 import ChangePasswordPage from "./screens/ChangePassword";
-
+import NotFound from "./screens/NotFound";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
-    errorElement: <p>Not found</p>,
+    errorElement: <NotFound />,
     children: [
       {
         path: "/",
