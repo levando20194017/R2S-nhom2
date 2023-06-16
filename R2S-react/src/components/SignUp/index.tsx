@@ -16,6 +16,10 @@ interface ResponseData {
 
 export const SignUpForm = () => {
     const [message, setMessage] = useState<string>('');
+    const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
+    const handleShowPasswordChange = () => {
+        setIsShowPassword(!isShowPassword);
+    }
     const navigate = useNavigate();
     const dispath = useDispatch()
     const btnLogin = () => {
@@ -100,7 +104,7 @@ export const SignUpForm = () => {
                         </div>
                         <div className="inputPassword d-flex">
                             <div>
-                                <input id="password" type="password" name="password" placeholder="Mật khẩu" className="form-control"
+                                <input id="password" type={isShowPassword ? "text" : "password"} name="password" placeholder="Mật khẩu" className="form-control"
                                     value={formik.values.password} onChange={formik.handleChange} onBlur={formik.handleBlur} />
                                 {formik.touched.password && formik.errors.password ? (
                                     <div className="text-danger">{typeof formik.errors.password === 'string' && (
@@ -109,7 +113,7 @@ export const SignUpForm = () => {
                                 ) : null}
                             </div>
                             <div>
-                                <input id="confirmPassword" type="password" name="confirmPassword" placeholder="Xác nhận" className="form-control"
+                                <input id="confirmPassword" type={isShowPassword ? "text" : "password"} name="confirmPassword" placeholder="Xác nhận" className="form-control"
                                     value={formik.values.confirmPassword} onChange={formik.handleChange} onBlur={formik.handleBlur} />
                                 {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
                                     <div className="text-danger">{typeof formik.errors.confirmPassword === 'string' && (
@@ -121,7 +125,8 @@ export const SignUpForm = () => {
                         <p>Sử dụng 8 ký tự trở lên và kết hợp chữ cái, chữ số và biểu tượng</p>
                         <div className="showPassword d-flex">
                             <div>
-                                <input type="checkbox" id="isShowPassword" name="isShowPassword" value="Hiện mật khẩu" />
+                                <input type="checkbox" id="isShowPassword" name="isShowPassword" value="Hiện mật khẩu"
+                                    checked={isShowPassword} onChange={handleShowPasswordChange} />
                             </div>
                             <div className="textShow"> Hiện mật khẩu</div>
                         </div>
