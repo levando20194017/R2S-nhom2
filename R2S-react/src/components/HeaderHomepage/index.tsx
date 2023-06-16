@@ -15,10 +15,12 @@ export const HeaderHomepage = () => {
             <header className="navbar-light  header-static bg-mode">
                 <nav className="navbar navbar-expand-lg">
                     <div className="container">
-                        <a className="navbar-brand" href="http://localhost:3000">
-                            <img className="logo-img" src={logo} alt=" " />
-                            <a>ShareSpace</a>
-                        </a>
+                        <Link to="/home" style={{ textDecoration: "none" }}>
+                            <a className="navbar-brand">
+                                <img className="logo-img" src={logo} alt=" " />
+                                <a >ShareSpace</a>
+                            </a>
+                        </Link>
                         <div className="nav-item w-100">
                             <form className="rounded position-relative">
                                 <input className="form-control ps-5 bg-light" type="search" placeholder="Search..." aria-label="Search" />
@@ -59,14 +61,13 @@ export const HeaderHomepage = () => {
                                         </Link>
                                         <li><a className="dropdown-item" href="#"> <i className="bi bi-slash-circle fa-fw pe-2"></i> Block</a></li>
                                         <li><hr className="dropdown-divider" /></li>
-                                        <Link to="/login" style={{ textDecoration: "none" }}>
+                                        <Link to="/" style={{ textDecoration: "none" }}>
                                             <li><a className="dropdown-item"
                                                 onClick={handleLogout}> <i className="bi bi-box-arrow-right" style={{ paddingRight: "6px" }}></i> Log out</a></li>
                                         </Link>
                                     </ul>
                                 </div>
                             </li>
-
                         </ul>
                     </div>
                 </nav>

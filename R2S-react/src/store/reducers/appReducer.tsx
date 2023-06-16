@@ -9,7 +9,7 @@ const initContentOfConfirmModal = {
 
 const initialState = {
     started: true,
-    systemMenuPath: '/home',
+    systemMenuPath: '/login',
     contentOfConfirmModal: {
         ...initContentOfConfirmModal
     }

@@ -13,6 +13,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Link } from "react-router-dom";
 
 interface ResponseData {
   errCode: number;
@@ -77,7 +78,7 @@ export const LoginForm = () => {
             progress: undefined,
             theme: "colored",
           });
-          navigate("/");
+          navigate("/home");
         }
       } catch (error) {
         console.log(error);
@@ -123,13 +124,16 @@ export const LoginForm = () => {
               </div>
               <div className="textShow"> Hiện mật khẩu</div>
             </div>
-            <div className="button-list mt-4">
-              <div>
-                <button className="btn-forgot">Forgot password</button>
-              </div>
-              <div>
-                <button type="submit" className="btn-next">Đăng nhập</button>
-              </div>
+            <div className="col-4 offset-8">
+              <Link to="/forgotpassword">
+                <a className="btn-forgot" style={{ cursor: "pointer" }}>Forgot password</a>
+              </Link>
+            </div>
+            <div className="button-list mt-4" style={{ display: "flex", alignItems: "center", textAlign: "center", justifyContent: "center" }}>
+              <button type="submit" className="btn-next">Đăng nhập</button>
+            </div>
+            <div className="mt-3" style={{ display: "flex", textAlign: "center", justifyContent: "center" }}>
+              <p>Không có tài khoản? <Link to="/signup"><a style={{ cursor: "pointer" }}>Đăng kí</a></Link></p>
             </div>
           </form>
           <ToastContainer
