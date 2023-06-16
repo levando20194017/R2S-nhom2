@@ -23,7 +23,7 @@ export const SignUpForm = () => {
     const navigate = useNavigate();
     const dispath = useDispatch()
     const btnLogin = () => {
-        navigate("/login")
+        navigate("/")
     }
     const formik = useFormik<any>({
         initialValues: {
